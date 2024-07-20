@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>XSS专题 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="XSS专题[TOC] 1 介绍XSS（Cross-site scripting，跨站脚本）是一种网站应用程序的安全漏洞攻击，是代码注入的一种。 2 成因2.1 Html&#x2F;JavaScript 是用户端可触达的解析性语言Html&#x2F;JavaScript 和 SQL 一样，都是用户端可触达的解析性语言。所以，用户可以改变最终的代码。（不同于 PHP 等，用户无法改变 PHP 的代码，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XSS专题">
+<meta property="og:url" content="https://yunpengzhang.github.io/2018/XSS%E4%B8%93%E9%A2%98/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="XSS专题[TOC] 1 介绍XSS（Cross-site scripting，跨站脚本）是一种网站应用程序的安全漏洞攻击，是代码注入的一种。 2 成因2.1 Html&#x2F;JavaScript 是用户端可触达的解析性语言Html&#x2F;JavaScript 和 SQL 一样，都是用户端可触达的解析性语言。所以，用户可以改变最终的代码。（不同于 PHP 等，用户无法改变 PHP 的代码，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yunpengzhang.github.io/2018/XSS%E4%B8%93%E9%A2%98/undefined">
+<meta property="article:published_time" content="2018-05-24T10:00:03.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.847Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yunpengzhang.github.io/2018/XSS%E4%B8%93%E9%A2%98/undefined">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2018/XSS专题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/XSS%E4%B8%93%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2018-05-24T10:00:03.000Z" itemprop="datePublished">2018-05-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      XSS专题
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="XSS专题"><a href="#XSS专题" class="headerlink" title="XSS专题"></a>XSS专题</h1><p>[TOC]</p>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h2><p>XSS（Cross-site scripting，跨站脚本）是一种网站应用程序的安全漏洞攻击，是代码注入的一种。</p>
+<h2 id="2-成因"><a href="#2-成因" class="headerlink" title="2 成因"></a>2 成因</h2><h3 id="2-1-Html-JavaScript-是用户端可触达的解析性语言"><a href="#2-1-Html-JavaScript-是用户端可触达的解析性语言" class="headerlink" title="2.1 Html&#x2F;JavaScript 是用户端可触达的解析性语言"></a>2.1 Html&#x2F;JavaScript 是用户端可触达的解析性语言</h3><p>Html&#x2F;JavaScript 和 SQL 一样，都是用户端可触达的解析性语言。所以，用户可以改变最终的代码。（不同于 PHP 等，用户无法改变 PHP 的代码，只能改变数据）</p>
+<p>用户可触达，所以用户就能改变代码来进行攻击。</p>
+<h3 id="2-2-浏览器如何解析-html-javaScript"><a href="#2-2-浏览器如何解析-html-javaScript" class="headerlink" title="2.2 浏览器如何解析 html&#x2F;javaScript"></a>2.2 浏览器如何解析 html&#x2F;javaScript</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://coolshell.cn/articles/9666.html">http://coolshell.cn/articles/9666.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://taligarsiel.com/Projects/howbrowserswork1.htm">http://taligarsiel.com/Projects/howbrowserswork1.htm</a><blockquote>
+<p>自己的理解：浏览器接收到了后端返回的html原文件后，会生成一个DOM树，解析javaScript动作列表之类的，然后，javaScript 就在做自己的动作了。同时，浏览器会动态实时监控DOM树的变化，看是否有新的 javaScript 生成或旧的灭亡，有的话，就把其加入到动作列表或从列表中删除。</p>
+</blockquote>
+</li>
+</ul>
+<p><strong>直接插入标签是不会执行的。要创建script元素才可以。</strong><br><a target="_blank" rel="noopener" href="https://github.com/damoclesX/damoclesX.github.io/issues/17">https://github.com/damoclesX/damoclesX.github.io/issues/17</a></p>
+<blockquote>
+<p>结论：用户可控制的输入在前端形成了完整的 javaScript 语句，即可完成攻击。</p>
+</blockquote>
+<h2 id="3-分类"><a href="#3-分类" class="headerlink" title="3 分类"></a>3 分类</h2><h3 id="3-1-反射型（非持久性XSS）"><a href="#3-1-反射型（非持久性XSS）" class="headerlink" title="3.1 反射型（非持久性XSS）"></a>3.1 反射型（非持久性XSS）</h3><p>反射型XSS也被称为非持久性XSS，是现在最容易出现的一种XSS漏洞。发出请求时，XSS代码出现在URL中，最后输入提交到服务器，服务器解析后在响应内容中出现这段XSS代码，最后浏览器解析执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">简单流程：</span><br><span class="line">    用户访问带有XSS代码的URL请求</span><br><span class="line">    服务器端接收数据后处理，然后返回带有XSS代码的数据发送给浏览器</span><br><span class="line">    浏览器解析带有XSS代码的数据后，最终造成XSS漏洞</span><br><span class="line">可能攻击流程：</span><br><span class="line">    • 用户aaa在网站www.xxx.com浏览网页</span><br><span class="line">    • 攻击者hacker发现www.xxx.com/xss.php存在反射型XSS漏洞，然后精心构造JavaScript代码，代码功能为盗取用户Cookie并发送到指定站点www.xxser.com</span><br><span class="line">    • hacker将带有反射型XSS漏洞的URL通过站内信发给aaa，站内信为一些诱惑信息，目的是使用户aaa点击</span><br><span class="line">    • 假设用户aaa点击了带有XSS漏洞的URL，则aaa的Cookie将被发送到www.xxser.com</span><br><span class="line">    • hacker获取aaa的Cookie后可以以aaa的身份登陆www.xxx.com，从而得到aaa的敏感信息</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="3-2-存储型（持久性XSS）"><a href="#3-2-存储型（持久性XSS）" class="headerlink" title="3.2 存储型（持久性XSS）"></a>3.2 存储型（持久性XSS）</h3><p>存储型XSS又被称为持久性XSS，它是最危险的一种跨站脚本，相比反射型XSS和DOM型XSS具有更高的隐蔽性，所以危害更大，因为它不需要用户手动触发。 允许用户存储数据的web程序都可能存在存储型XSS漏洞，当攻击者提交一段XSS代码后，被服务器端接收并存储，当所有浏览者访问某个页面时都会被XSS，其中最典型的例子就是留言板。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">测试技巧：</span><br><span class="line">    • 首先确定输入点和输出点，比如留言，</span><br><span class="line">    如：&lt;input type=&quot;text&quot; name=&quot;content&quot; value=&quot;&lt;script&gt;alert(/xss/)&lt;/script&gt;&quot; /&gt;</span><br><span class="line">    • 确定输出点后根据相应的标签构造HTML代码来闭合，如：&quot; /&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;&quot;，最终在html中为：</span><br><span class="line">    &lt;input type=&quot;text&quot; name=&quot;content&quot; value=&quot;&quot; /&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;&quot;&quot; /&gt;</span><br><span class="line">测试步骤：</span><br><span class="line">    • 添加正常留言，用firebug快速查找显示标签，若显示区域不在html属性内则可以直接使用XSS代码注入</span><br><span class="line">    • 若不能得知内容输出的位置，可以使用模糊测试方案，XSS代码如下：</span><br><span class="line">        a. &lt;script&gt;alert(document.cookie)&lt;/script&gt;  //普通注入</span><br><span class="line">        b. &quot; /&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;   //闭合标签注入</span><br><span class="line">        c. &lt;/textarea&gt;&#x27;&quot;&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;   //闭合标签注入</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="3-3-DOM-型"><a href="#3-3-DOM-型" class="headerlink" title="3.3 DOM 型"></a>3.3 DOM 型</h3><p>DOM型就完全与后端无关，是前端的事情。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;title&gt;Welcome!&lt;/title&gt;</span><br><span class="line">  &lt;/head&gt;</span><br><span class="line">  &lt;body&gt;</span><br><span class="line">    &lt;p&gt;Hi&lt;/p&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">      var pos=document.URL.indexOf(&quot;name=&quot;)+5;</span><br><span class="line">      document.write(document.URL.substring(pos,document.URL.length));</span><br><span class="line">    &lt;/script&gt;</span><br><span class="line">  &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http://www.test.com/welcome.html?name=lihua</span><br><span class="line"></span><br><span class="line">http://www.test.com/welcome.html?name=&lt;script&gt;alert(document.cookie)&lt;/script&gt;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+<h2 id="4-防护策略"><a href="#4-防护策略" class="headerlink" title="4 防护策略"></a>4 防护策略</h2><h3 id="4-1-危害"><a href="#4-1-危害" class="headerlink" title="4.1 危害"></a>4.1 危害</h3><blockquote>
+<p>JavaScript可以用来获取用户Cookie、改变页面内容、URL转跳，那么存在XSS漏洞的网站，就可以盗取用户Cookie、黑掉页面、导航到恶意网站，而攻击者仅仅需要向页面中注入JavaScript代码。</p>
+</blockquote>
+<ul>
+<li>盗取管理员Cookie</li>
+<li>XSS Worm</li>
+<li>挂马(水坑攻击)</li>
+<li>键盘记录(有局限性)</li>
+<li>利用网站重定向</li>
+<li>修改网页内容</li>
+<li>等等</li>
+</ul>
+<h2 id="5-攻击策略"><a href="#5-攻击策略" class="headerlink" title="5 攻击策略"></a>5 攻击策略</h2><h2 id="6-参考链接"><a href="#6-参考链接" class="headerlink" title="6 参考链接"></a>6 参考链接</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://xss-game.appspot.com/">https://xss-game.appspot.com/</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.google.com/about/appsecurity/learning/xss/">https://www.google.com/about/appsecurity/learning/xss/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.jianshu.com/p/9b285eac9d60">http://www.jianshu.com/p/9b285eac9d60</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.freebuf.com/articles/web/40520.html">http://www.freebuf.com/articles/web/40520.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.firmianay.com/2016/03/27/xss-e5-88-9d-e5-ad-a6-e6-80-bb-e7-bb-93/">http://www.firmianay.com/2016/03/27/xss-e5-88-9d-e5-ad-a6-e6-80-bb-e7-bb-93/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.freebuf.com/articles/web/42727.html">http://www.freebuf.com/articles/web/42727.html</a></li>
+</ul>
+<h2 id="杂"><a href="#杂" class="headerlink" title="杂"></a>杂</h2><p>Cookie可以使用httponly的方式来解决</p>
+<h2 id="game"><a href="#game" class="headerlink" title="game"></a>game</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://xss-game.appspot.com/">https://xss-game.appspot.com</a></p>
+</blockquote>
+<ol>
+<li><script>alert(1)</script>
+<p>反射型xss<br>后端收到来自用户的输入直接原样返回给前端</p>
+</li>
+<li><img src="/2018/XSS专题/undefined"  onerror="alert('1')">
+单页面html已经加载完毕后，你再手动往html里面加入代码是没有意义的，因为此时的js已经编译完毕了，不再读取html中的js代码，要通过js的一个语句才能重新读取某段js，加入到js编译后的代码中。（这种情况类似于：页面通过json拿回来数据，再组装到dom中。）</li>
+</ol>
+<p>此时，我们可以通过标签的行为来运行时执行新的js语句。</p>
+<p>参考说明：<a target="_blank" rel="noopener" href="https://github.com/damoclesX/damoclesX.github.io/issues/17">https://github.com/damoclesX/damoclesX.github.io/issues/17</a></p>
+<ol start="3">
+<li>.jpg’ onerror&#x3D;’alert(1)’ &#x2F;&gt;&lt;img src&#x3D;’&#x2F;static&#x2F;level3&#x2F;cloud<br>正如前面说的，运行时直接插入是不行的。要再运行时执行，必须借助于标签的属性。</li>
+</ol>
+<p>另外这里告诉我们可以通过组装的方式。</p>
+<ol start="4">
+<li>这个不行   1’);alert(‘1        要用这个  1%27)%3balert(%271<blockquote>
+<p>When browsers parse tag attributes, they HTML-decode their values first. <foo bar='z'> is the same as &lt;foo bar&#x3D;’&#x7a;’ 标签中的内容，浏览器会自动作html转码</p>
+</blockquote>
+</li>
+</ol>
+<p>如果你能改变属性中的值，那即使输入被作了html转义也没有用。</p>
+<ol start="5">
+<li><pre><code>javascript:alert(1)%3b   javascript:alert(1) 都可以
+</code></pre>
+</li>
+</ol>
+<p>a标签的href可以这样用</p>
+<h3 id="这里要理清html转义（编码解码）-和-url编码解码"><a href="#这里要理清html转义（编码解码）-和-url编码解码" class="headerlink" title="这里要理清html转义（编码解码） 和 url编码解码"></a>这里要理清html转义（编码解码） 和 url编码解码</h3><p>总结，如果我们不能有效地改变源码（插入不被转意的<script>到源码中），那么就只能考虑要通过标签。如何能改变源码，就两种方式都考虑。（构造script和构造标签）</p>
+<h2 id="攻击用例"><a href="#攻击用例" class="headerlink" title="攻击用例"></a>攻击用例</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.lvtao.net/dev/xss.html">https://www.lvtao.net/dev/xss.html</a></p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;img src=&quot;a.jpg&quot; onerror=&#x27;alert(1)&#x27; /&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="xss绕过与白名单机制"><a href="#xss绕过与白名单机制" class="headerlink" title="xss绕过与白名单机制"></a>xss绕过与白名单机制</h2><p>富文本，通常用白名单。但是，既然是写的程序，很有可能就会被绕过白名单。<br><a target="_blank" rel="noopener" href="http://blog.idhyt.com/2014/10/15/technic-xss-bypass/">http://blog.idhyt.com/2014/10/15/technic-xss-bypass/</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.lvtao.net/dev/xss.html">https://www.lvtao.net/dev/xss.html</a></p>
+<p>这个白名单绕过的机制，可以在前端可以自己过滤一遍收到的数据，后端必须要先过滤一下</p>
+<h2 id="防御与监控"><a href="#防御与监控" class="headerlink" title="防御与监控"></a>防御与监控</h2><p><a target="_blank" rel="noopener" href="http://www.freebuf.com/articles/web/110583.html">http://www.freebuf.com/articles/web/110583.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2018/XSS%E4%B8%93%E9%A2%98/" data-id="clyu6o700004jarq570dv0r5v" data-title="XSS专题" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/%E6%94%B9%E5%8F%98%E5%AF%B9%E6%80%9D%E8%80%83%E7%9A%84%E6%83%B3%E6%B3%95%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E5%BF%AB%E6%80%9D%E6%85%A2%E6%83%B3%E3%80%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          改变对思考的想法——读《快思慢想》
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/%E4%B8%A4%E4%B8%AA%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E6%A1%88%E4%BE%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">两个解决并发问题的案例</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

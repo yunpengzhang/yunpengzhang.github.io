@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>zookeeper典型应用场景解析 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="zookeeper实现了主动通知节点变化，原子创建节点，临时节点，按序创建节点等功能。通过以上功能的组合， zookeeper能够在分布式系统中组合出很多上层功能。下面就看几个常用到的场景，及使用方式和注意事项。 名字服务(NameService)顾名思义，就是给分布式系统中的资源，使用人易于理解的名字，能够找到需要的资源。例如：一个统一接口系统，接收服务然后转给后端服务的具体server。当新增">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper典型应用场景解析">
+<meta property="og:url" content="https://yunpengzhang.github.io/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="zookeeper实现了主动通知节点变化，原子创建节点，临时节点，按序创建节点等功能。通过以上功能的组合， zookeeper能够在分布式系统中组合出很多上层功能。下面就看几个常用到的场景，及使用方式和注意事项。 名字服务(NameService)顾名思义，就是给分布式系统中的资源，使用人易于理解的名字，能够找到需要的资源。例如：一个统一接口系统，接收服务然后转给后端服务的具体server。当新增">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper.jpg">
+<meta property="og:image" content="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper1-1.jpg">
+<meta property="article:published_time" content="2018-09-04T14:19:34.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.851Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2018/zookeeper典型应用场景解析" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/" class="article-date">
+  <time class="dt-published" datetime="2018-09-04T14:19:34.000Z" itemprop="datePublished">2018-09-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      zookeeper典型应用场景解析
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>zookeeper实现了主动通知节点变化，原子创建节点，临时节点，按序创建节点等功能。通过以上功能的组合， zookeeper能够在分布式系统中组合出很多上层功能。下面就看几个常用到的场景，及使用方式和注意事项。</p>
+<h2 id="名字服务-NameService"><a href="#名字服务-NameService" class="headerlink" title="名字服务(NameService)"></a>名字服务(NameService)</h2><p>顾名思义，就是给分布式系统中的资源，使用人易于理解的名字，能够找到需要的资源。例如：一个统一接口系统，接收服务然后转给后端服务的具体server。当新增接口时，请求方只要传递新接口的名字，系统就能够根据名字找到对应的server，发现服务并转发请求。 在zookeeper中，按照命名的规则，建立对应的目录层级，例如 &#x2F;company&#x2F;team&#x2F;service 就能找到一个公司，一个team下的提供的某个服务的路径。当上线新业务时，服务在zk中找到自己名字的节点，建立一个临时节点，写入配置信息。当调用方使用时，统一接口查询对应目录下的节点，选择合适的读取配置。当业务下掉时，直接删除服务，临时节点自动删除，服务自动下线掉。</p>
+<h2 id="配置管理-Configuration-Management"><a href="#配置管理-Configuration-Management" class="headerlink" title="配置管理(Configuration Management)"></a>配置管理(Configuration Management)</h2><p>分布式系统位于不同主机的服务，有时要使用统一的配置。可以在zookeeper中的znode节点存储配置数据，每个客户端都监控（watch）znode的变化，当配置变更时，会通知推送，然后各个客户端再拉取新的配置。 注意：zk的watch是一次性的，客户端读取后要重新watch，并且检查是否是最新版本。</p>
+<h2 id="组员管理-Group-Membership"><a href="#组员管理-Group-Membership" class="headerlink" title="组员管理(Group Membership)"></a>组员管理(Group Membership)</h2><p>在Master、Slave模式下，Master要知道都有哪些Slave，进行同步等操作。也要及时知道哪些Slave死掉，然后去做相应处理。具体做法是Master先建立一个&#x2F;Slave节点，每个Slave上线时都在&#x2F;Slave建立一个临时节点，写入配置，server监控&#x2F;Slave节点，对增加或消失的节点进行相应处理。 以上三种用法都属于配置类服务，按照一定的规则进行配置，需要读取配置的地方监控配置的变化。</p>
+<h2 id="简单互斥锁-Simple-Lock"><a href="#简单互斥锁-Simple-Lock" class="headerlink" title="简单互斥锁(Simple Lock)"></a>简单互斥锁(Simple Lock)</h2><p>每个进程都在&#x2F;lock下创建锁znode，并watch &#x2F;lock，只有一个创建成功，当成功的进程释放锁或者停止超时会通知其他进程，重新进入竞争锁的机制。</p>
+<h2 id="互斥锁-Simple-Lock-without-Herd-Effect"><a href="#互斥锁-Simple-Lock-without-Herd-Effect" class="headerlink" title="互斥锁(Simple Lock without Herd Effect)"></a>互斥锁(Simple Lock without Herd Effect)</h2><p>为了不引发惊群效应，只要能给竞争进程排序就可以了，每个进程都在&#x2F;lock的节点下创建带序号的znode，并且每个znode只监听比他次小的节点，当次小的节点释放锁后，比他次大的节点会收到通知，拿到锁权限。 <img src="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper.jpg"> 注意：防止还没有执行到的进程死掉，要更新监听顺序。例如：2监听1，3监听2，如果2进程提前死掉，3要监控到这种状态，判断是否是2关闭，还是2释放锁，如果不是正常关闭，要去监听1更新监听。</p>
+<h2 id="读写锁-Read-Write-Lock"><a href="#读写锁-Read-Write-Lock" class="headerlink" title="读写锁(Read&#x2F;Write Lock)"></a>读写锁(Read&#x2F;Write Lock)</h2><p>读写锁：多个读可以并发执行，但是写和读，写和写不能同时执行。 改动互斥锁方案，<strong>如果是写锁，监听他次小的节点，次小节点释放锁后，写锁检测是否还有更小的节点，如果有继续监听，如果没有获得写锁执行</strong>；如果是读锁，监听左侧最大的写锁，当写锁释放后就获得读锁。 也要注意中间节点死掉提前释放的问题，要重新监听节点。 <img src="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper1-1.jpg"></p>
+<h2 id="屏障-Barrier"><a href="#屏障-Barrier" class="headerlink" title="屏障(Barrier)"></a>屏障(Barrier)</h2><p>在分布式系统中，屏障是这样一种语义: 客户端需要等待多个进程完成各自的任务，然后才能继续往前进行下一步。 例如凌晨备份，等待每个进程把数据都dump结束后，再打包压缩传走。 client先设置&#x2F;mybarrier的znode，然后启动每个进程，每个进程执行结束成功后，在&#x2F;mybarrier下创建结束的znode节点，client发现&#x2F;mybarrier下的node数都达到了，再继续下面的任务。</p>
+<h2 id="双屏障-Double-Barrier"><a href="#双屏障-Double-Barrier" class="headerlink" title="双屏障(Double Barrier)"></a>双屏障(Double Barrier)</h2><p>双屏障是这样一种语义: 它可以用来同步一个任务的开始和结束，当有足够多的进程进入屏障后，才开始执行任务；当所有的进程都执行完各自的任务后，屏障才撤销。 进入屏障：创建&#x2F;ready和&#x2F;process节点，每个进程都先到ready中注册，注册数量达到要求时，通知所有进程启动开始执行。 离开屏障：在&#x2F;process下把注册ready的进程都建立节点，每个进程执行结束后删掉&#x2F;process下的对应节点。当&#x2F;process下为空时，任务全结束。 锁、屏障，本质都是排序，给要使用的节点排序，根据顺序来执行策略，保证执行不冲突。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上的应用场景，并不是只有zk能实现的，而且实现的方式也是通用的，换做其他组件，只要满足了通知和原子创建、自增id，都可以实现这些场景的使用。而且实现的方法也是通用的，不仅在zk中才这样用。 本质上就是统一配置通知机制，和原子简历自增id节点排序机制，实现了配置类和锁类协调的功能。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《ZooKeeper原理及使用》 <a target="_blank" rel="noopener" href="http://www.wuzesheng.com/?p=2609">http://www.wuzesheng.com/?p=2609</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/" data-id="clyu6o701004narq51hpoaeig" data-title="zookeeper典型应用场景解析" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/%E5%8D%81%E5%88%86%E9%92%9F%E4%BA%86%E8%A7%A3ZAB%EF%BC%88Zookeeper%20Atomic%20Broadcast%EF%BC%89%E5%8D%8F%E8%AE%AE/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          十分钟了解ZAB（Zookeeper Atomic Broadcast）协议
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/%E4%B8%80%E7%A7%8D%E5%BF%AB%E9%80%9F%E7%AE%80%E6%B4%81%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">一种快速简洁的一致性哈希算法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="owen的博客">
+<meta property="og:url" content="https://yunpengzhang.github.io/page/14/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-2012/2012-02-16-remove-svn-directories" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/2012-02-16-remove-svn-directories/" class="article-date">
+  <time class="dt-published" datetime="2012-02-16T01:36:48.000Z" itemprop="datePublished">2012-02-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/2012-02-16-remove-svn-directories/">删除svn目录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>当向svn添加目录时，如果目录下有.svn目录，会出现冲突。</p>
+<p>所以在引用代码时总是先删除掉.svn目录，使用以下命令。</p>
+<p>[code lang&#x3D;”cpp”]<br>find . -name “.svn” -exec rm -rf {} ;</p>
+<p>find . -name “.svn” | xargs rm -rf<br>[&#x2F;code]</p>
+<p>具体的含义可以参考《find命令总结》</p>
+<p>find命令将所有匹配到的文件一起传递给exec执行,有些系统对能够传递给exec的命令长度有限制，这样在find命令运行几分钟之后，就会出现溢出错误。</p>
+<p>注意：在删除文件前最好先打印一下查找到的文件，核对下是否是要删除的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2012/2012-02-16-remove-svn-directories/" data-id="clyu6o6ys000varq5c7zt586j" data-title="删除svn目录" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2012/2012-02-16-makefile-tips" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/2012-02-16-makefile-tips/" class="article-date">
+  <time class="dt-published" datetime="2012-02-16T01:14:03.000Z" itemprop="datePublished">2012-02-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/2012-02-16-makefile-tips/">makefile小技巧</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>1.操作打文件makefile要加上宏</p>
+<p>[code]</p>
+<p>-D_FILE_OFFSET_BITS&#x3D;64 -D_LARGEFILE_SOURCE</p>
+<p>[&#x2F;code]</p>
+<p>2.如果要make时打印警告信息，又不输出有符号和无符号比较、变量定义未使用警告</p>
+<p>[code]</p>
+<p>-Wall -Wno-sign-compare -Wno-unused-variable</p>
+<p>[&#x2F;code] </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2012/2012-02-16-makefile-tips/" data-id="clyu6o6yr000sarq51e2n5f9a" data-title="makefile小技巧" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2012/monitor上报技巧小结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2012/monitor%E4%B8%8A%E6%8A%A5%E6%8A%80%E5%B7%A7%E5%B0%8F%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2012-02-08T11:02:45.000Z" itemprop="datePublished">2012-02-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2012/monitor%E4%B8%8A%E6%8A%A5%E6%8A%80%E5%B7%A7%E5%B0%8F%E7%BB%93/">monitor上报技巧小结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>对于服务器程序部署运营后，监控程序健康情况，最主要手段的还是使用monitor观察上报属性。经过一段时间的开发，总结了一下开发程序时加上报的一些经验，希望对大家有所帮助，也希望能够有人提出建议，更好地完善。</p>
+        
+          <p class="article-more-link">
+            <a href="/2012/monitor%E4%B8%8A%E6%8A%A5%E6%8A%80%E5%B7%A7%E5%B0%8F%E7%BB%93/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2012/monitor%E4%B8%8A%E6%8A%A5%E6%8A%80%E5%B7%A7%E5%B0%8F%E7%BB%93/" data-id="clyu6o6zj002varq520r249p2" data-title="monitor上报技巧小结" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-12-04-how-to-survive-between-pm-and-de" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-12-04-how-to-survive-between-pm-and-de/" class="article-date">
+  <time class="dt-published" datetime="2011-12-04T07:29:09.000Z" itemprop="datePublished">2011-12-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-12-04-how-to-survive-between-pm-and-de/">如何在pm和de之间生存</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>　　在小项目中，通常人力不足时会让开发担任pm职务。一般情况下，担任pm的时候是不用编码参与开发的，但是也有特殊的时候，这时就会有既当教练，又当运动员的情况发生。<br>　　<br>　　其实原本这也没什么，但是经历后才发现，不容易，如果再给一次机会，还是会有很多提高的空间。<br>　　<br>　　如果想要做到游刃有余，那么必须去分好自己的角色，知道什么时候我是pm，什么时候我是de。即使在一个会议上，也要想清楚，我这段时间是从pm回答，这段时间是从de的角度阐述。有些左右互搏的意思，如果搞不定，也有个简单的办法，只扮演pm，de让另一个搭档来。
+        
+          <p class="article-more-link">
+            <a href="/2011/2011-12-04-how-to-survive-between-pm-and-de/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-12-04-how-to-survive-between-pm-and-de/" data-id="clyu6o6yq000qarq586c49dcp" data-title="如何在pm和de之间生存" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-11-20-how-to-improve-the-efficiency-of-meetings" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-11-20-how-to-improve-the-efficiency-of-meetings/" class="article-date">
+  <time class="dt-published" datetime="2011-11-20T07:08:01.000Z" itemprop="datePublished">2011-11-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-11-20-how-to-improve-the-efficiency-of-meetings/">如何提高会议效率</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>　　平时工作中，交流的方式很多，邮件、im、电话、会议。其中会议是最有效、直接的沟通方式，但是也存在着耗时成本高的问题。所以当会议来临，如何提高会议效率，是一件值得仔细考虑的事。<br>　　<br>　　一、要请和会议内容有关系的人<br>　　<br>　　可能看着是句废话，但是确实有需要我们注意的地方。一个项目，可能汇集了多方，但是我们的会议议题可能只是开发方案的问题，那么就不要把数据分析、运维的人都叫上。浪费的时间比较多，会让无关的同事受到影响，另外人数多了也增加了组织者的压力。<br>　　<br>　　二、要有主持人和决策人<br>　　<br>　　一般会议组织者作为主持人，或者会议的受益者。总之要有个人来主持会议，把握会议的发展和流程。这点很重要，主持人要知道会议的背景和议题，交代完背景后引导大家讨论。<br>　　<br>　　会议也要有决策人，否则无法确定最后结论，一定要有说得算的人在场。<br>　　<br>　　三、要确定会议需解决的问题<br>　　<br>　　会议开始时就要确定要解决的问题，越细越好，根据问题的具体情况决定会议流程。会议有明确的目的，不至于中间跑题，根据问题的解决多少来判断一次会议是否成功。<br>　　<br>　　四、把握会议流程和时间<br>　　<br>　　主持人要根据会议的解决问题来引导流程，当有人发散和跑提时，即使把议题引导回来。如果问题解决不了，根据时间判断，尽早去讨论下一个问题，不要在节外生枝的问题上花费太多时间。例如是过进度的会议，那么直接讨论上一期做了什么，下期准备做什么，有什么问题，最后讨论问题解决方法。尽量把能交代的问题交代后再发散。另外会议时间不要太长，人会疲劳，效果也不好。一个小时左右为宜。<br>　　<br>　　五、输出会议纪要<br>　　<br>　　会议结束后要及时输出会议纪要，把会议解决问题列出，写出会议解决方法。相关人都要收到或抄送到，另外也要把解决问题需要的人和时间明确写到纪要中，作为对后面工作的一个衡量方法。<br>　　<br>　　六、跟进结论<br>　　<br>　　会议只是商定方法，后面执行的效果，还是要跟进的。<br>　　<br>　　做到以上几点可以说会议的效率就很高了，会议的目的也达到了，但是说着简单，实现起来很难，还需要实践中多摸索。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-11-20-how-to-improve-the-efficiency-of-meetings/" data-id="clyu6o6yp000narq5grylb9mp" data-title="如何提高会议效率" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-11-07-what-programmers-need" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-11-07-what-programmers-need/" class="article-date">
+  <time class="dt-published" datetime="2011-11-07T08:24:12.000Z" itemprop="datePublished">2011-11-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-11-07-what-programmers-need/">程序员需要什么</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>　　程序员需要什么？键盘、鼠标、编译器……虽然是必要的，但是今天要说的是对于程序员的职业来说，要想做好，需要的环境和素质到底是什么。<br>　　<br>　　<strong>一、一份热爱的工作</strong><br>　　<br>　　如果你喜欢windows开发，那么可以去做客户端，游戏。如果喜欢linux，可以去做嵌入式，后台。喜欢做手机应用，那么可以做苹果或android系统程序。总之，去做你喜欢并且擅长的领域，那么会自然有动力。投入的精力和取得的成绩也成正比的，你越喜欢投入的就越多，当然效果也会越好。如果正从事一个不喜欢的领域，那么快停。
+　　</p>
+        
+          <p class="article-more-link">
+            <a href="/2011/2011-11-07-what-programmers-need/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-11-07-what-programmers-need/" data-id="clyu6o6yo000larq55n2y4z7x" data-title="程序员需要什么" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-11-06-give-me-a-song-of-the-time" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-11-06-give-me-a-song-of-the-time/" class="article-date">
+  <time class="dt-published" datetime="2011-11-06T06:52:38.000Z" itemprop="datePublished">2011-11-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-11-06-give-me-a-song-of-the-time/">给我一首歌的时间</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>　　平时做事情，总会遇到自己不喜欢做的情况。例如：这个数据提取好麻烦，根本不知道从何下手；这个bug已经出现了好久，很多人都没解决，还是不要看了；博客好久没更新了，要不要写一篇呢。好多事情都是想要去做，但是有困难在前面，而从心里还想逃避，不知道你遇到过没有。那我们怎么能克服这种心理，然后把要做的事情顺利地做完呢？答案是给自己一首歌的时间。<br>　　<br>　　万事开头难，难的就是开始这个阶段。可能没有入手的地方，不知道要做得方向，一旦开始，剩下的只是轻车熟路，按部就班，虽然过程会很麻烦，但是要做什么已经知道了。所谓的“给我一首歌的时间”就是给自己几分钟，即使再不想做，再困难的事情也坚持地开始做。在这段时间内不去想和这事无关的内容，专心思考要达到什么样的目标，达到目标时要如何做。把自己全身心的投入到事情之中，一会就有想法了，然后为了解决想到的问题就开始查资料，写测试。总之就开始知道要做什么了，给事情起了个好头，后面一步步都变得清晰，也知道要做什么，怎么做了。<br>　　<br>　　当然，也会有这段时间虽然过去了，但是还是没有头绪，不知道怎么做，还是厌烦去做。那么之后只有两条路要走：一、继续思考，如何解决遇到的问题；二、想为什么这事做不了，给一个可以不做的站得住的理由。剩下就没什么好办法了。<br>
+        
+          <p class="article-more-link">
+            <a href="/2011/2011-11-06-give-me-a-song-of-the-time/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-11-06-give-me-a-song-of-the-time/" data-id="clyu6o6yn000iarq5hrmj4t2l" data-title="给我一首歌的时间" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-10-26-internet-design-ideas-miscellany" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-10-26-internet-design-ideas-miscellany/" class="article-date">
+  <time class="dt-published" datetime="2011-10-26T07:15:58.000Z" itemprop="datePublished">2011-10-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-10-26-internet-design-ideas-miscellany/">互联网设计想法杂记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>睡觉前总结下最近对互联网项目设计的想法</p>
+<ol>
+<li><p>keep it simple and stupid.尽量的保证设计的简单，能把复杂的事情变简单才是最重要的，只要性能可以满足，那么哪个方法简单采用哪个方法，最好能够让心接项目的人在听你讲一遍就知道什么意思，哪怕不看代码也能够想到怎么实现。</p>
+</li>
+<li><p>用多少设计多少。设计最怕过度设计，一个需求如果看不到那么远，最好现在需要什么就设计什么，不要想我后面还加什么东西，保留一大堆保留字。这样会让开始设计就变得复杂，而且真到扩展的时候才发现，预留的那些功能是不够的，即使够也捉襟见肘。</p>
+</li>
+<li><p>架构就是把复杂的东西变简单。不要以为越复杂越庞大的架构越牛，真正好的架构是利用种种小的模块拼凑成高楼大厦，就像linux的设计哲学，很多小的组件拼凑成强大的功能，即使修改只要改变一小部分就可以了。</p>
+</li>
+<li><p>不要做假设。用数据说话，不要用自己的行为认为是用户的行为。可能你只是一小部分用户，真正用户要什么你是不知道的，你要经过调查才可以。另外别以为用户都是很规矩的，就是有输入特殊的用户来考验系统。特别是服务海量用户。</p>
+</li>
+<li><p>明确需求。知道你为什么要做这个系统，做这个系统有什么作用。技术再好，编码再优美，没有产品也没用。就好比建筑师建造了一座皇宫，但是没有人来参观居住也是无用的。需求明确了，那个方案好，哪个不好，一下子就比出来了。</p>
+</li>
+<li><p>保持一颗接受变化的心。这个系统做出来要称五年、十年。互联网的变化五年、十年是什么样，谁知道。想太久是没用的，应该想怎么能让系统有更好的扩展能力，或者如果有新变化怎么能迅速构建新系统。试想摩尔定律，硬件变化那么大，现在纠结的内存硬盘可能在几年之后都不是问题，还有互联网产品能撑十年那也是奇迹。</p>
+</li>
+<li><p>多想设计，少编码。设计的时间要充分，先想到各个角落。不要等编码的时候才想函数几个参数，应该返回什么。那注定会出现写一半发现不对重写的现象，加班救火也不奇怪。</p>
+</li>
+</ol>
+<p>以上观点属睡前随笔，难免有重复和不足之处，欢迎补充！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-10-26-internet-design-ideas-miscellany/" data-id="clyu6o6ym000garq5gfi6gre3" data-title="互联网设计想法杂记" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-10-18-e7ad89e5be85" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-10-18-e7ad89e5be85/" class="article-date">
+  <time class="dt-published" datetime="2011-10-18T07:48:06.000Z" itemprop="datePublished">2011-10-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-10-18-e7ad89e5be85/">等待</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>坐车要塞车等，吃饭要排队等，坐在电视机前看广告等节目播放，薪水上调需要等……生活需要等的东西太多了，每天都在等待中迎来一件件好事，坏事，惊奇。等待，是通往结果的过程，是一段旅程的中间经历。是见到亲人前坐的火车，是高考前一页页的习题，是到达终点前的艰苦训练。等待，无处不在，大家都在某个期待结果之前便构成了等待。我们，都在等待死亡，不管你是愿意还是不愿意，也不管你体没体会到还是没发现。</p>
+<p>那么，我们要用什么样的心态等待呢？因人而异，不过火急火燎，心急如焚什么都干不了是不行的。我们只是等吗？当然不是。如果站在原地，什么都不做，是等不到答案的，等到的只是失望和事与愿违。</p>
+<p>等待，要有积极的行动。大雁等待过冬是不会收起翅膀的，人们等待愿望的实现也是需要行动才行。理想实现的过程大多是艰辛，令人痛苦，正是如此，也让人难忘。在通往终点的道路上要有积极的行动，想办法如何才能更加靠近目标，如何才能缩短于终点的距离，加强自己的能力，努力积极的行动，才是不二的选择，才能尽早的等来想要的结果，才能不浪费掉这段过程并培养自己。
+        
+          <p class="article-more-link">
+            <a href="/2011/2011-10-18-e7ad89e5be85/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-10-18-e7ad89e5be85/" data-id="clyu6o6yk000carq54xyiaups" data-title="等待" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-2011/2011-10-18-snowball" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2011/2011-10-18-snowball/" class="article-date">
+  <time class="dt-published" datetime="2011-10-18T01:50:54.000Z" itemprop="datePublished">2011-10-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2011/2011-10-18-snowball/">滚雪球 </a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><strong>案例</strong><br><strong>基本情况</strong><br>如下图，进程A是一个单进程系统，通过udp套接字接收前端请求进行处理。在处理过程中，需要访问后端系统B，是同步的方式访问后端系统B，根据后端系统B的SLA，超时时间设置是100ms。前端用户请求的超时时间是1s。</p>
+        
+          <p class="article-more-link">
+            <a href="/2011/2011-10-18-snowball/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2011/2011-10-18-snowball/" data-id="clyu6o6yl000darq55c277x4f" data-title="滚雪球 " class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/13/">&laquo; 上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/15/">下一页 &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

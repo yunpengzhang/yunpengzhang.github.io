@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Leetcode 第139场周赛解题报告 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="今天的比赛考固定算法的不多，只有最后一道动态规划的题目稍难一点。其他的题目花些心思，也可以想出来。在面试中如果考察一个人的脑力，前三道题目比较好。都能答出来一些，但是也有优化的空间。 第三题用了很多时间，导致第四题时间都不够了。做比赛和工程还是有差别，应该有思路就敲代码，先把题目过了再说，一些细节不用考虑太多。有些地方不优化也可以过掉。但是在工程上就要考究些，因为代码是在服务器24小时跑，能优化一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Leetcode 第139场周赛解题报告">
+<meta property="og:url" content="https://yunpengzhang.github.io/2019/Leetcode%20%E7%AC%AC139%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="今天的比赛考固定算法的不多，只有最后一道动态规划的题目稍难一点。其他的题目花些心思，也可以想出来。在面试中如果考察一个人的脑力，前三道题目比较好。都能答出来一些，但是也有优化的空间。 第三题用了很多时间，导致第四题时间都不够了。做比赛和工程还是有差别，应该有思路就敲代码，先把题目过了再说，一些细节不用考虑太多。有些地方不优化也可以过掉。但是在工程上就要考究些，因为代码是在服务器24小时跑，能优化一">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-04-21T10:00:03.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.851Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2019/Leetcode 第139场周赛解题报告" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/Leetcode%20%E7%AC%AC139%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/" class="article-date">
+  <time class="dt-published" datetime="2019-04-21T10:00:03.000Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Leetcode 第139场周赛解题报告
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>今天的比赛考固定算法的不多，只有最后一道动态规划的题目稍难一点。其他的题目花些心思，也可以想出来。在面试中如果考察一个人的脑力，前三道题目比较好。都能答出来一些，但是也有优化的空间。</p>
+<p>第三题用了很多时间，导致第四题时间都不够了。做比赛和工程还是有差别，应该有思路就敲代码，先把题目过了再说，一些细节不用考虑太多。有些地方不优化也可以过掉。但是在工程上就要考究些，因为代码是在服务器24小时跑，能优化一点点，在海量服务中也能节省很多计算资源。</p>
+<p>下面是详细的题解和思考。</p>
+<hr>
+<p>比赛的地址 Weekly Contest 139</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/contest/weekly-contest-139">https://leetcode-cn.com/contest/weekly-contest-139</a></p>
+<h2 id="1-字符串的最大公因子"><a href="#1-字符串的最大公因子" class="headerlink" title="1. 字符串的最大公因子"></a>1. 字符串的最大公因子</h2><p><strong>题目：</strong></p>
+<p>字符串的最大公因子(Greatest Common Divisor of Strings)</p>
+<p><strong>地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/contest/weekly-contest-139/problems/greatest-common-divisor-of-strings/">https://leetcode-cn.com/contest/weekly-contest-139/problems/greatest-common-divisor-of-strings/</a></p>
+<p><strong>题意：</strong></p>
+<blockquote>
+<p>对于字符串 S 和 T，只有在 S &#x3D; T + … + T（T 与自身连接 1 次或多次）时，我们才认定 “T 能除尽 S”。</p>
+<p>返回字符串 X，要求满足 X 能除尽 str1 且 X 能除尽 str2。</p>
+</blockquote>
+<p><strong>思路：</strong></p>
+<p>返回的公共字符串X就是经过n1次重复为Str1，经过n2次重复为Str2的最长字符串。</p>
+<p>那么X一定是S和T的公共前缀字符串的子串。</p>
+<p>先计算出S和T的公共前缀字符串str，然后从str的最长前缀到最短前缀依次判断，是否满足能「除尽」str1和str2。</p>
+<p>要求的X的字符串长度，一定是str1和str2长度的公约数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isSubStr</span><span class="params">(string &amp; str1, string &amp; str)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="type">int</span> len1 = str<span class="number">1.</span><span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> len2 = str.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span>(len1%len2!=<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">int</span> repeat = len1/len2;</span><br><span class="line">        string tmp;</span><br><span class="line">        <span class="keyword">while</span>(repeat--)</span><br><span class="line">        &#123;</span><br><span class="line">            tmp += str;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> tmp == str1;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">string <span class="title">gcdOfStrings</span><span class="params">(string str1, string str2)</span> </span>&#123;</span><br><span class="line">        string str;</span><br><span class="line">        <span class="type">int</span> len1 = str<span class="number">1.</span><span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> len2 = str<span class="number">2.</span><span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; len1 &amp;&amp; i &lt; len2; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(str1[i] == str2[i])</span><br><span class="line">            &#123;</span><br><span class="line">                str.<span class="built_in">push_back</span>(str1[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> len = str.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">while</span>(len &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="type">bool</span> b1 = <span class="built_in">isSubStr</span>(str1, str);</span><br><span class="line">            <span class="type">bool</span> b2 = <span class="built_in">isSubStr</span>(str2, str);</span><br><span class="line">            <span class="keyword">if</span>(b1 &amp;&amp; b2)</span><br><span class="line">                <span class="keyword">return</span> str;</span><br><span class="line">            str.<span class="built_in">pop_back</span>();</span><br><span class="line">            len --;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> str;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-按列翻转得到最大值等行数"><a href="#2-按列翻转得到最大值等行数" class="headerlink" title="2. 按列翻转得到最大值等行数"></a>2. 按列翻转得到最大值等行数</h2><p><strong>题目：</strong></p>
+<p>按列翻转得到最大值等行数(Flip Columns For Maximum Number of Equal Rows)</p>
+<p><strong>地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/contest/weekly-contest-139/problems/flip-columns-for-maximum-number-of-equal-rows/">https://leetcode-cn.com/contest/weekly-contest-139/problems/flip-columns-for-maximum-number-of-equal-rows/</a></p>
+<p><strong>题意：</strong></p>
+<blockquote>
+<p>给定由若干 0 和 1 组成的矩阵 matrix，从中选出任意数量的列并翻转其上的 每个 单元格。翻转后，单元格的值从 0 变成 1，或者从 1 变为 0 。</p>
+<p>返回经过一些翻转后，行上所有值都相等的最大行数。</p>
+</blockquote>
+<p><strong>思路：</strong></p>
+<p>两行数字，经过对一些列的反转，最后都达到这一行的值相同。那么这两行数字的关系有两种情况：</p>
+<ol>
+<li>两行数字的值都相同；</li>
+<li>两行数字的值都相反；</li>
+</ol>
+<p>其他任何情况，一定有一列始终都不满足相等。</p>
+<p>所以题目的结果为看满足两种情况的行的集合最多有多少？</p>
+<p>只要两两枚举就能算出来，曾经加入过其他集合的可以后面就不比较了。</p>
+<p><strong>代码：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">   <span class="function"><span class="type">int</span> <span class="title">maxEqualRowsAfterFlips</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; a)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> m = a.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> n = a[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> ret = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m ; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">int</span> tmp = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = i<span class="number">+1</span>; j &lt; m; ++j)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span>(a[i]==a[j])</span><br><span class="line">                &#123;</span><br><span class="line">                    tmp++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="type">int</span> k;</span><br><span class="line">                    <span class="keyword">for</span>(k = <span class="number">0</span>; k &lt; n; ++k)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span>(a[i][k]+a[j][k]!=<span class="number">1</span>)</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">if</span>(k==n)</span><br><span class="line">                        tmp++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ret = <span class="built_in">max</span>(ret, tmp);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-负二进制数相加"><a href="#3-负二进制数相加" class="headerlink" title="3. 负二进制数相加"></a>3. 负二进制数相加</h2><p><strong>题目：</strong></p>
+<p>负二进制数相加(Adding Two Negabinary Numbers)</p>
+<p><strong>地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/contest/weekly-contest-139/problems/adding-two-negabinary-numbers/">https://leetcode-cn.com/contest/weekly-contest-139/problems/adding-two-negabinary-numbers/</a></p>
+<p><strong>题意：</strong></p>
+<blockquote>
+<p>给出基数为 -2 的两个数 arr1 和 arr2，返回两数相加的结果。</p>
+<p>数字以 数组形式 给出：数组由若干 0 和 1 组成，按最高有效位到最低有效位的顺序排列。例如，arr &#x3D; [1,1,0,1] 表示数字 (-2)^3 + (-2)^2 + (-2)^0 &#x3D; -3。数组形式 的数字也同样不含前导零：以 arr 为例，这意味着要么 arr &#x3D;&#x3D; [0]，要么 arr[0] &#x3D;&#x3D; 1。</p>
+<p>返回相同表示形式的 arr1 和 arr2 相加的结果。两数的表示形式为：不含前导零、由若干 0 和 1 组成的数组。</p>
+</blockquote>
+<p><strong>思路：</strong></p>
+<p>-2进制的算法和2进制算法是一样的。都是先模-2得到当前位的值，然后再除-2得到高位的进位值。</p>
+<p>但是由于题目中要求每位必须是0或者是1，所以在模-2等于-1时，要进行特殊处理。</p>
+<p>如果取模的结果是-1表示当前位的值为-1，要变成正数才能正常表示。要把当前位变为1，要把除数加1。</p>
+<p>如果想不明白，请思考下公式 <code>(x*-2)+(-1) = (x-1)*-2 + 1</code>。</p>
+<p><strong>代码：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">addNegabinary</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; arr1, vector&lt;<span class="type">int</span>&gt;&amp; arr2)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res;</span><br><span class="line">        <span class="type">int</span> i = arr<span class="number">1.</span><span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> j = arr<span class="number">2.</span><span class="built_in">size</span>()<span class="number">-1</span>;</span><br><span class="line">        <span class="type">int</span> carry = <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> divid = <span class="number">-2</span>;</span><br><span class="line">        <span class="keyword">while</span>(i &gt;= <span class="number">0</span>||j &gt;= <span class="number">0</span>||carry)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(i&gt;=<span class="number">0</span>)</span><br><span class="line">                carry += arr1[i];</span><br><span class="line">            <span class="keyword">if</span>(j&gt;=<span class="number">0</span>)</span><br><span class="line">                carry += arr2[j];</span><br><span class="line">            </span><br><span class="line">            <span class="type">int</span> mod = carry % divid;</span><br><span class="line">            carry /= divid;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(mod &lt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                mod -= divid;</span><br><span class="line">                carry += <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            res.<span class="built_in">push_back</span>(mod);</span><br><span class="line">            </span><br><span class="line">            --i;</span><br><span class="line">            --j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span>(res.<span class="built_in">size</span>()&gt;<span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(res.<span class="built_in">back</span>()==<span class="number">0</span>)</span><br><span class="line">                res.<span class="built_in">pop_back</span>();</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">reverse</span>(res.<span class="built_in">begin</span>(), res.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-元素和为目标值的子矩阵数量"><a href="#4-元素和为目标值的子矩阵数量" class="headerlink" title="4. 元素和为目标值的子矩阵数量"></a>4. 元素和为目标值的子矩阵数量</h2><p><strong>题目：</strong></p>
+<p>元素和为目标值的子矩阵数量(Number of Submatrices That Sum to Target)</p>
+<p><strong>地址：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/contest/weekly-contest-139/problems/number-of-submatrices-that-sum-to-target/">https://leetcode-cn.com/contest/weekly-contest-139/problems/number-of-submatrices-that-sum-to-target/</a></p>
+<p><strong>题意：</strong></p>
+<blockquote>
+<p>给出矩阵 matrix 和目标值 target，返回元素总和等于目标值的非空子矩阵的数量。</p>
+<p>子矩阵 x1, y1, x2, y2 是满足 x1 &lt;&#x3D; x &lt;&#x3D; x2 且 y1 &lt;&#x3D; y &lt;&#x3D; y2 的所有单元 <code>matrix[x][y]</code> 的集合。</p>
+<p>如果 (x1, y1, x2, y2) 和 (x1’, y1’, x2’, y2’) 两个子矩阵中部分坐标不同（如：x1 !&#x3D; x1’），那么这两个子矩阵也不同。</p>
+</blockquote>
+<p><strong>思路：</strong></p>
+<p>先对每行数据进行处理，求出每行开始到当前位置的和。<code>sum[i][j] = matrix[i][0]+matrix[i][0]+...+matrix[i][j]</code>。</p>
+<p>这样一行中j，k两个之间的区间和可以表示为<code>sum[i][j]-sum[i][k-1]</code>，很快能求出。</p>
+<p>之后枚举两列c1,c2，对于每一次枚举，行数从上到下扫描。</p>
+<p>每扫描到一行r1，先计算出当前行与两列，还有第0行形成的矩阵的和S。</p>
+<p>然后查找是否有之前的行r0的和为S-target。</p>
+<p>如果有，则r0，r1，c1，c2形成的和为target。</p>
+<p>最后再把S存起来，留给后面的行扫描时查找。</p>
+<p><strong>代码：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; mp;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numSubmatrixSumTarget</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; matrix, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> m = matrix.<span class="built_in">size</span>();</span><br><span class="line">        <span class="type">int</span> n = matrix[<span class="number">0</span>].<span class="built_in">size</span>();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">1</span>; j &lt; n; ++j)</span><br><span class="line">            &#123;</span><br><span class="line">                matrix[i][j] += matrix[i][j<span class="number">-1</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j = <span class="number">0</span>; j &lt; n; ++j)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> k = j; k &lt; n; ++k)</span><br><span class="line">            &#123;</span><br><span class="line">                mp.<span class="built_in">clear</span>();</span><br><span class="line">                mp[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">                <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; m; ++i)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">if</span>(j &gt; <span class="number">0</span>)</span><br><span class="line">                        sum += matrix[i][k] - matrix[i][j<span class="number">-1</span>];</span><br><span class="line">                    <span class="keyword">else</span></span><br><span class="line">                        sum += matrix[i][k];</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">if</span>(mp.<span class="built_in">find</span>(sum-target)!=mp.<span class="built_in">end</span>())</span><br><span class="line">                        ans += mp[sum-target];</span><br><span class="line">                    </span><br><span class="line">                    mp[sum]++;</span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2019/Leetcode%20%E7%AC%AC139%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/" data-id="clyu6o70s0072arq5b254g4ne" data-title="Leetcode 第139场周赛解题报告" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/Leetcode%20%E7%AC%AC138%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          Leetcode 第138场周赛解题报告
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/Leetcode%20%E7%AC%AC140%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">Leetcode 第140场周赛解题报告</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

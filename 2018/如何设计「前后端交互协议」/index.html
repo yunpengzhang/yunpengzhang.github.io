@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>如何设计「前后端交互协议」 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="客户端和服务器交互，web页面和后端交互，都需要设计前后端交互协议。究竟怎么样设计最好，是否有些方法论呢？有的。 方法很简单：前端侧重展示，后端侧重逻辑；轻前端，重后端。 理由如下： 安全性无论是客户端，还是web页面，在黑客面前，都是可以修改逻辑的。所以重要的逻辑，都是要做在后端，即使是游戏为了性能和体验，在后端也要做校验逻辑。 逻辑在后端是省不掉的，至于前端，能省则省。不用相同的逻辑实现两次，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何设计「前后端交互协议」">
+<meta property="og:url" content="https://yunpengzhang.github.io/2018/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E3%80%8C%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92%E5%8D%8F%E8%AE%AE%E3%80%8D/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="客户端和服务器交互，web页面和后端交互，都需要设计前后端交互协议。究竟怎么样设计最好，是否有些方法论呢？有的。 方法很简单：前端侧重展示，后端侧重逻辑；轻前端，重后端。 理由如下： 安全性无论是客户端，还是web页面，在黑客面前，都是可以修改逻辑的。所以重要的逻辑，都是要做在后端，即使是游戏为了性能和体验，在后端也要做校验逻辑。 逻辑在后端是省不掉的，至于前端，能省则省。不用相同的逻辑实现两次，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-13T06:15:07.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.851Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2018/如何设计「前后端交互协议」" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E3%80%8C%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92%E5%8D%8F%E8%AE%AE%E3%80%8D/" class="article-date">
+  <time class="dt-published" datetime="2018-11-13T06:15:07.000Z" itemprop="datePublished">2018-11-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      如何设计「前后端交互协议」
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>客户端和服务器交互，web页面和后端交互，都需要设计前后端交互协议。究竟怎么样设计最好，是否有些方法论呢？有的。 方法很简单：<strong>前端侧重展示，后端侧重逻辑；轻前端，重后端。</strong> 理由如下：</p>
+<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>无论是客户端，还是web页面，在黑客面前，都是可以修改逻辑的。所以重要的逻辑，都是要做在后端，即使是游戏为了性能和体验，在后端也要做校验逻辑。 逻辑在后端是省不掉的，至于前端，能省则省。不用相同的逻辑实现两次，以后升级修改，只要改后端就可以了，前端只要保证根据后端传过来的展示规则，正常展示就可以。</p>
+<h2 id="易于升级"><a href="#易于升级" class="headerlink" title="易于升级"></a>易于升级</h2><p>web页面还好，可以控制发布。但是客户端，分发就要用很久，而且用户不一定马上升级。所以对协议的制定要求更高，最好是只后端修改，前端就能用上新功能。 这样后端也好维护，不用根据客户端版本而写不同的逻辑。前端也不用关心后端是否有变动要一致。</p>
+<h2 id="易于实现和扩展"><a href="#易于实现和扩展" class="headerlink" title="易于实现和扩展"></a>易于实现和扩展</h2><p>前端只关心展示，相当于一个哑终端。服务器发下来什么指令，客户端就展示什么，并不需要了解业务逻辑。 出现问题也好查，展示问题前端负责，逻辑问题后端负责。只要把前后端交互的内容打印日志出来，就知道是谁的问题。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>一个活动页面，用户进来展示一个中奖列表，列表有两只股票A和B。根据用户是否有交易过，B股票上展示一个「不可领取」的戳。 <strong>方案一：</strong> 前后端协议只有一个字段，用户是否交易过。 前端默认进来都展示A和B，根据从后端得到的字段，确定是否展示「不可领取」戳。 后端除了查询是否有交易过，也要每次查看用户是否有中过奖，领取过A或B。 <strong>问题：</strong> 如果哪天产品经理修改了需求，可以领二十支股票，前后端都要修改，而且每次前端都要把产品的逻辑领会全，根据产品经理的要求修改。每增加减少一支股票，都要修改，很烦。 怎么解决呢？ <strong>方案二：</strong> 前端后端协议是一个列表，列表中包含要展示的股票信息，有的字段表示是否展示戳。 前端不关心产品逻辑，只是按照这种来展示。 后端根据用户数据，把协议打包好，传给前端。 前后端可以想象为一个单机程序，如果写个单机程序，肯定是写一次逻辑。逻辑层负责实现逻辑和表现层展示UI，后端对应逻辑层，前端对应表现层。但是为什么网络的就要写两次呢，不是必须的。</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>协议要有扩展性，根据字段或版本号识别不同版本。 客户端要兼容不识别的字段，不要因为升级新字段不认识而产生异常行为（crash或逻辑出错）。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2018/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E3%80%8C%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92%E5%8D%8F%E8%AE%AE%E3%80%8D/" data-id="clyu6o70c005oarq55k15dyw5" data-title="如何设计「前后端交互协议」" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E5%A5%BD%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          程序员如何处理好时区问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">代码中的一致性问题</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

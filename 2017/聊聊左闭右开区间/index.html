@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>聊聊左闭右开区间 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="《编程珠玑》里说过：大约10%的专业程序员，才能够正确地写出二分查找。尽管第一个二分查找程序于1946年就公布了，但是第一个没有bug的程序在1962年才出现。  二分查找易错的主要原因：缩小查找范围的区间切分不对。如果使用左闭右开区间划分，就很难出错了。 左闭右开区间在STL数据结构的构造参数，一些api的返回值范围等场景，也都广泛应用。仔细思考，是有些规律在里面的。 先来看三个使用的场景。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊左闭右开区间">
+<meta property="og:url" content="https://yunpengzhang.github.io/2017/%E8%81%8A%E8%81%8A%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80%E5%8C%BA%E9%97%B4/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="《编程珠玑》里说过：大约10%的专业程序员，才能够正确地写出二分查找。尽管第一个二分查找程序于1946年就公布了，但是第一个没有bug的程序在1962年才出现。  二分查找易错的主要原因：缩小查找范围的区间切分不对。如果使用左闭右开区间划分，就很难出错了。 左闭右开区间在STL数据结构的构造参数，一些api的返回值范围等场景，也都广泛应用。仔细思考，是有些规律在里面的。 先来看三个使用的场景。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-21T10:00:03.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.847Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2017/聊聊左闭右开区间" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/%E8%81%8A%E8%81%8A%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80%E5%8C%BA%E9%97%B4/" class="article-date">
+  <time class="dt-published" datetime="2017-05-21T10:00:03.000Z" itemprop="datePublished">2017-05-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      聊聊左闭右开区间
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>《编程珠玑》里说过：大约10%的专业程序员，才能够正确地写出二分查找。尽管第一个二分查找程序于1946年就公布了，但是第一个没有bug的程序在1962年才出现。</p>
+</blockquote>
+<p>二分查找易错的主要原因：缩小查找范围的区间切分不对。如果使用左闭右开区间划分，就很难出错了。</p>
+<p>左闭右开区间在STL数据结构的构造参数，一些api的返回值范围等场景，也都广泛应用。仔细思考，是有些规律在里面的。</p>
+<p>先来看三个使用的场景。</p>
+<h3 id="一、javascript随机数返回值"><a href="#一、javascript随机数返回值" class="headerlink" title="一、javascript随机数返回值"></a>一、javascript随机数返回值</h3><p>在js中，产生随机数函数 <code>Math.random()</code> 返回值是<code>[0,1)</code>间的实数。</p>
+<p>通过偏移和缩放返回值，能映射到任意实数区间。再通过取下界，随机产生任意整数，从而满足生成各种随机数的场景。</p>
+<p>如果返回范围是全封闭，全开，或者左开右闭可以吗？<br>答案是不可以。</p>
+<p><strong>全封闭</strong>：包含了上界的1，会造成产生整数的随机数概率不均匀。</p>
+<p>例如要随机产生0-9十个整数，做法是<code>Math.floor(Math.random()*10)</code>,产生的数是均匀随机，满足需求。如果包含了上界的1，那么产生10是超出范围的。只有随机出1时才产生10，概率要比其他整数小很多，随机的概率就不均匀了。</p>
+<p><strong>全开区间</strong>：没有了0点，映射生成整数的时候，产生0的概率要比其他整数的概率要低，生成的随机数概率不均。</p>
+<p><strong>左开右闭</strong>：左开右闭和左闭右开是对称的，也可以。只是左闭右开更习惯些。</p>
+<h3 id="二、迭代器遍历"><a href="#二、迭代器遍历" class="headerlink" title="二、迭代器遍历"></a>二、迭代器遍历</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; count; ++i)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在C语言中，数组的个数是count，遍历的循环下标的区间也是左闭右开[0,count)。因为数组是从0开始计数，所以不能包含上界。</p>
+<p>A、要写为左右都是闭区间，[0,count-1]也是可以的。但是有个减一比较别扭。</p>
+<p>B、有些迭代器，例如链表或数的子节点指针，就要设计个哨兵节点表示结束，判断结束时直接判断迭代器是否不等于end，不用右开区间，要判断next是否是null，会多出一些额外的判断，对一些边界要用特殊逻辑。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(iterator it=a.<span class="built_in">start</span>();it!=a.<span class="built_in">end</span>();++it)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、在算法和api中的左闭右开区间"><a href="#三、在算法和api中的左闭右开区间" class="headerlink" title="三、在算法和api中的左闭右开区间"></a>三、在算法和api中的左闭右开区间</h3><p>在C语言标准库的二分查找bsearch，快速排序qsort的函数里，无论是函数内部实现，还是参数，都传的左闭右开区间；</p>
+<p>在STL容器的构造函数，算法操作，也都是左闭右开区间。</p>
+<p>一方面是为了容易迭代，更通用。</p>
+<p>另一方面是像二分、快排，都是分治算法，一个左闭右开区间<code>[x,y)</code>，子区间可以分解为<code>[x,y0),[y0,y1),[y1,y2)...[yn,y)</code>，父子同构，天然适合分治实现。</p>
+<p>在整数范围内，如果非要写为左闭右闭区间，也是可以的。<code>[x,y]</code>分解的子区间为<code>[x,y0-1],[y0,y1-1],[y1,y2-1]...[yn,y]</code>。但是无论怎么分，总有一个区间和其他不同，划分偏左或偏右一个元素，划分是不<strong>整齐</strong>的。要打各种边界处理补丁来弥补。</p>
+<p>在实数范围来进行计算，就用左闭右闭区间就不能实现了。</p>
+<p>例如利用二分在单调递增的函数上逼近计算，每次都是分为[x,(x+y)&#x2F;2),和[(x+y)&#x2F;2,y)两个区间，如果左右封闭，要么进行一次重复判断计算，要么表示不出来。在实数范围内，给定一个实数x0，是给不出和他距离最小的x1的确切值的，更别说用计算机表示了。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>左闭右开区间划分的子区间，也符合左闭右开的性质，划分前后同构；</p>
+<p>按比例划分子区间后，映射到边界节点上的概率互成比例；</p>
+<p>全闭区间要处理边界情况，边界点需特殊处理，对程序设计和算法理解造成障碍。</p>
+<p>综上，<strong>在应用数字范围的场景中，抽象成左闭右开区间，是一个好方法。</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2017/%E8%81%8A%E8%81%8A%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80%E5%8C%BA%E9%97%B4/" data-id="clyu6o6zz004farq51ni2frke" data-title="聊聊左闭右开区间" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/%E3%80%90%E6%80%9D%E8%80%83%E3%80%91%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%88%87%E5%88%86%E7%8E%AF%E7%9A%84%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          【思考】一致性hash切分环的问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/%E5%A6%82%E4%BD%95%E7%9C%8B%E5%BE%85%E4%BC%98%E5%8C%96/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">如何看待优化</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

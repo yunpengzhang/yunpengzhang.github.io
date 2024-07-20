@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>jump Consistent hash介绍 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="jump Consistent hash用途是一个hash分配算法，在增加或减少hash桶个数时，是有1&#x2F;n的节点被移动到新桶内，其他key所在的桶序号不变。 要求桶是按顺序编号的，相对于web缓存，更适合存储的场景。 适合场景用于分布式存储产品中，而不用在缓存类型的产品。因为有节点不可用时，jumphash用存活节点分担不可用节点的能力不强，会导致分布不均。但是在存储类中，节点都会有主">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jump Consistent hash介绍">
+<meta property="og:url" content="https://yunpengzhang.github.io/2017/jump%20Consistent%20hash%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="jump Consistent hash用途是一个hash分配算法，在增加或减少hash桶个数时，是有1&#x2F;n的节点被移动到新桶内，其他key所在的桶序号不变。 要求桶是按顺序编号的，相对于web缓存，更适合存储的场景。 适合场景用于分布式存储产品中，而不用在缓存类型的产品。因为有节点不可用时，jumphash用存活节点分担不可用节点的能力不强，会导致分布不均。但是在存储类中，节点都会有主">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-10-24T10:00:03.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.847Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2017/jump Consistent hash介绍" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2017/jump%20Consistent%20hash%E4%BB%8B%E7%BB%8D/" class="article-date">
+  <time class="dt-published" datetime="2017-10-24T10:00:03.000Z" itemprop="datePublished">2017-10-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      jump Consistent hash介绍
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="jump-Consistent-hash"><a href="#jump-Consistent-hash" class="headerlink" title="jump Consistent hash"></a>jump Consistent hash</h3><h2 id="用途"><a href="#用途" class="headerlink" title="用途"></a>用途</h2><p>是一个hash分配算法，在增加或减少hash桶个数时，是有1&#x2F;n的节点被移动到新桶内，其他key所在的桶序号不变。</p>
+<p>要求桶是按顺序编号的，相对于web缓存，更适合存储的场景。</p>
+<h2 id="适合场景"><a href="#适合场景" class="headerlink" title="适合场景"></a>适合场景</h2><p>用于分布式存储产品中，而不用在缓存类型的产品。因为有节点不可用时，jumphash用存活节点分担不可用节点的能力不强，会导致分布不均。但是在存储类中，节点都会有主备，主节点不可用路由到备节点，key的分布不会有变化。</p>
+<p>适合在<strong>分布式系统中</strong>，根据key来选择被分配到的服务场景。每次新增新的服务节点，只有1&#x2F;n的key会变动，不会因为扩容或缩容瞬间<br>造成大部分缓存失效。</p>
+<p>但是也有局限，和其他的一致性hash相比。如果有中间的桶失效，是不能够像割环hash一样，均匀分配到其他节点的，只能找个新替换<br>节点来取代。但是优点是不用存储，计算量也不大。代码短，易于实现。</p>
+<h2 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h2><p>利用线性同余计算的固定性，每次输入参数固定，输出就固定的特性，来替代用存储。利用运算，减少存储空间。</p>
+<p>由于运算量的优化，比查找存储空间速度更快，所以从时间、空间上算法更优。</p>
+<p>引申：有时用运算生成的数字串，映射要存储的空间，会使算法有意想不到的效果。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int32_t</span> <span class="title">JumpConsistentHash</span><span class="params">(<span class="type">uint64_t</span> key, <span class="type">int32_t</span> num_buckets)</span> </span>&#123;</span><br><span class="line">    <span class="type">int64_t</span> b = <span class="number">-1</span>, j = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (j &lt; num_buckets) &#123;</span><br><span class="line">        b = j;</span><br><span class="line">        key = key * <span class="number">2862933555777941757ULL</span> + <span class="number">1</span>;</span><br><span class="line">        j = (b + <span class="number">1</span>) * (<span class="built_in">double</span>(<span class="number">1LL</span> &lt;&lt; <span class="number">31</span>) / <span class="built_in">double</span>((key &gt;&gt; <span class="number">33</span>) + <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>算法的全部代码，输入是64位的key，桶的数量（一般对应服务器的数量），输出是一个桶的编号（从0开始）。</p>
+<p>jump consistent hash的设计目标是：</p>
+<p>平衡性，把对象均匀地分布在所有桶中。</p>
+<p>单调性，当桶的数量变化时，只需要把一些对象从旧桶移动到新桶，不需要做其它移动。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>为什么上面的代码能够实现一致性hash的功能，我们一步一步来看。要实现的功能就是多加一个节点，节点数变为n，只有1&#x2F;n的key会变动。</p>
+<p>我们先构造一个函数，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ch(key, num_buckets) </span><br><span class="line"></span><br><span class="line">表示有num_buckets个桶，一个key的值会分配到的bucket编号[0, num_buckets)。</span><br></pre></td></tr></table></figure>
+
+<p>所以对于任意key，k，ch(k,1)&#x3D;0,因为只有一个桶。为了让算法平衡，ch(k,2)讲有一半的key留在0号桶中，一半的移到1号桶中。</p>
+<p>总结的规律是，ch(k,n+1)和ch(k,n)相比，n&#x2F;(n+1)的key是不动的，1&#x2F;(n+1)的key移动到第n号桶。</p>
+<p>对于每次新增桶的个数时，计算每个key的新位置，确定是否要移动到新的桶中。</p>
+<p>通过随机数生成器，来判定key是否要移动到新的桶中，概率是1&#x2F;(n+1)要移动。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int ch(int key, int num_buckets) &#123;</span><br><span class="line">    random.seed(key) ;</span><br><span class="line">    int b = 0; // This will track ch(key, j +1) .</span><br><span class="line">    for (int j = 1; j &lt; num_buckets; j ++) &#123;</span><br><span class="line">        if (random.next() &lt; 1.0/(j+1) ) b = j ;</span><br><span class="line">    &#125;</span><br><span class="line">    return b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//代码中的random.next()产生[0,1)的随机数，随机数序列只和key有关，key为随机种子。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这段代码是满足算法的平衡性和单调性的，算法复杂度是O(N)。满足了正确性，接下来优化性能。</p>
+<p>从算法代码可以看出，大多数情况下<code>random.next() &lt; 1.0/(j+1)</code>是不被执行的。</p>
+<p>对于一个key来说，ch(key,j+1)的值，很少会随着j增长而变化的。当ch(key,j+1)!&#x3D;ch(key,j)时，<br>ch(key,j+1)&#x3D;j。</p>
+<p>&#x2F;&#x2F;我们假设ch(key,j)是一个随机变量，通过伪随机数，来确定一个数值b，当j增长到b时，ch(key,b)!&#x3D;ch(key,b-1),<br>并且ch(key,j)&#x3D;ch(key,b-1)。</p>
+<p>假设一个key的值为k，b为一个跳变的桶数量。则ch(k,b)!&#x3D;ch(k,b+1),并且ch(k,b+1)&#x3D;b.</p>
+<p>下面寻找下一个比b大的跳变的桶数量j。则ch(k,j+1)！&#x3D;ch(k,j),ch(k,j)&#x3D;b,ch(k,j+1)&#x3D;j。<br>有</p>
+<p>ch(k,b+1)&#x3D;b</p>
+<p>ch(k,j)&#x3D;b,</p>
+<p>ch(k,j)&#x3D;ch(k,b+1)</p>
+<p>ch(k,j+1)&#x3D;j</p>
+<p>ch(k,b)!&#x3D;ch(k,b+1)</p>
+<p>ch(k,j+1)！&#x3D;ch(k,j)</p>
+<p>所以，我们已知k，b时，要找到j，对于(b,j]区间的变量i，如果不发生跳变，必须满足<br>ch(k,i)&#x3D;ch(k,b+1)。</p>
+<p>所以有概率</p>
+<p>P(j&gt;&#x3D;i) &#x3D; P(ch(k,i)&#x3D;ch(k,b+1))</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">先举几个例子P(ch(k,10)=ch(k,11))的概率是10/11,</span><br><span class="line"></span><br><span class="line">P(ch(k,11)=ch(k,12))的概率是11/12,</span><br><span class="line"></span><br><span class="line">所以P(ch(k,10)=ch(k,12))的概率是P(ch(k,10)=ch(k,11))*P(ch(k,11)=ch(k,12))=(10/11)*(11/12)=10/12</span><br><span class="line"></span><br><span class="line">对于任意的n&gt;=m,P(ch(k,n)=ch(k,m))=m/n。</span><br></pre></td></tr></table></figure>
+<p>所以对于上面的等式，<br>P(j&gt;&#x3D;i) &#x3D; P(ch(k,i)&#x3D;ch(k,b+1))&#x3D;(b+1)&#x2F;i。</p>
+<p>假设一个随机数r在(0,1)区间，由k和j确定。</p>
+<p>如果r&lt;&#x3D;(b+1)&#x2F;i,那么P(j&gt;&#x3D;i)&#x3D;（b+1)&#x2F;i为不跳变。<br>那么产生随机数r后，就能确定i的最小值为(b+1)&#x2F;r。<br>因为r&lt;&#x3D;(b+1)&#x2F;i   &#x3D;&gt;    i&lt;&#x3D;(b+1)&#x2F;r.</p>
+<p>又因为i是整数，所以有<br>r！&#x3D;0</p>
+<p>i&#x3D;floor((b+1)&#x2F;r)</p>
+<p>代码可改写为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">int ch(int key, int num_buckets) &#123;</span><br><span class="line">	random.seed(key);</span><br><span class="line">	int b = -1; // bucket number before the previous jump</span><br><span class="line">	int j = 0; // bucket number before the current jump</span><br><span class="line">	while (j &lt; num_buckets) &#123;</span><br><span class="line">		b = j;</span><br><span class="line">		r = random.next();</span><br><span class="line">		j = floor((b + 1) / r);</span><br><span class="line">	&#125;</span><br><span class="line">	return = b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设r的期望为0.5，时间复杂度为Olg(N)。<br>这个算法有点绕，通过随机数的产生来判定下一跳的j，优化算法，保证在整体key的跳变满足增加桶数为n+1时，只有1&#x2F;(n+1)的数据移动。</p>
+<p>我们再看</p>
+<p>key &#x3D; key * 2862933555777941757ULL + 1;<br>j &#x3D; (b + 1) * (double(1LL &lt;&lt; 31) &#x2F; double((key &gt;&gt; 33) + 1));</p>
+<p>和<br>r &#x3D; random.next();<br>j &#x3D; floor((b + 1) &#x2F; r);</p>
+<p>有什么关系。</p>
+<p>利用线性同余算法产生一个64位的整数，然后通过映射到（0，1]区间的小数。</p>
+<p>(key&gt;&gt;33)+1是取key值的高31位的值再加1，范围为(1,2^31+1)<br>1LL&lt;&lt;31的值为2^31。</p>
+<p>所以<br>[(key&gt;&gt;33)+1]&#x2F;1LL&lt;&lt;31 的取值范围是(0,1],如果(key&gt;&gt;33)&#x3D;2^31那么会大于1，由于是c的整数运算，大于1也会取证忽略掉小数部分。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>该算法的精髓：通过随机种子产生随机数，减少存储；利用概率和随机数，确定key在bucket_num范围内落在的桶序号。</p>
+<p>既减少了运算量，也易于实现，对于存储类路由非常适合，而且key的分散性不依赖key本身，只依赖随即生成器，对key的要求不高，不用做转换。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">参考：</span><br><span class="line">https://blog.helong.info/blog/2015/03/13/jump_consistent_hash/</span><br><span class="line">https://arxiv.org/ftp/arxiv/papers/1406/1406.2294.pdf</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2017/jump%20Consistent%20hash%E4%BB%8B%E7%BB%8D/" data-id="clyu6o6zx0047arq5259s2v08" data-title="jump Consistent hash介绍" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          CORS（跨站资源共享）介绍
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/%5B%E9%80%9F%E6%88%90%5D%E4%BA%86%E8%A7%A3%E4%B8%80%E8%87%B4%E6%80%A7hash%E7%AE%97%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">快速了解一致性hash算法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

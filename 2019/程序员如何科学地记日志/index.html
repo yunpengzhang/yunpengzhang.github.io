@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>程序员如何科学地记日志 | owen的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="无论是哪种程序员，日常开发中都离不开记日志。但是通过最近的review会，发现很多程序员在记日志的时候，还是会有些问题。那么如何科学地记录日志呢？ 为什么要记日志在寻求方法前，我们先看看我们记日志的目标。 日志是程序运行时的x光，能够追踪到程序运行的状态，通过日志，程序员能够加速调试速度，还原异常情况出现的场景。 也有通过日志记录处理数据，方便后面统计和审计。 还有通过日志进行备份，当数据有问题时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序员如何科学地记日志">
+<meta property="og:url" content="https://yunpengzhang.github.io/2019/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E5%9C%B0%E8%AE%B0%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:site_name" content="owen的博客">
+<meta property="og:description" content="无论是哪种程序员，日常开发中都离不开记日志。但是通过最近的review会，发现很多程序员在记日志的时候，还是会有些问题。那么如何科学地记录日志呢？ 为什么要记日志在寻求方法前，我们先看看我们记日志的目标。 日志是程序运行时的x光，能够追踪到程序运行的状态，通过日志，程序员能够加速调试速度，还原异常情况出现的场景。 也有通过日志记录处理数据，方便后面统计和审计。 还有通过日志进行备份，当数据有问题时">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-01-30T10:00:03.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:47:04.859Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">owen的博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一个程序员的成长之路</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://yunpengzhang.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-2019/程序员如何科学地记日志" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E5%9C%B0%E8%AE%B0%E6%97%A5%E5%BF%97/" class="article-date">
+  <time class="dt-published" datetime="2019-01-30T10:00:03.000Z" itemprop="datePublished">2019-01-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      程序员如何科学地记日志
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>无论是哪种程序员，日常开发中都离不开记日志。但是通过最近的review会，发现很多程序员在记日志的时候，还是会有些问题。那么如何科学地记录日志呢？</p>
+<h2 id="为什么要记日志"><a href="#为什么要记日志" class="headerlink" title="为什么要记日志"></a>为什么要记日志</h2><p>在寻求方法前，我们先看看我们记日志的目标。</p>
+<p>日志是程序运行时的x光，能够追踪到程序运行的状态，通过日志，程序员能够加速调试速度，还原异常情况出现的场景。</p>
+<p>也有通过日志记录处理数据，方便后面统计和审计。</p>
+<p>还有通过日志进行备份，当数据有问题时，通过日志恢复数据。</p>
+<p>总之，我们记日志，是为了给人看，来了解程序运行的状态。今天我们只讲日常调试和发现异常的场景。</p>
+<h2 id="日志记录什么内容"><a href="#日志记录什么内容" class="headerlink" title="日志记录什么内容"></a>日志记录什么内容</h2><p>既然日志是给人看的，就要让人能读懂，给出足够的信息。要带有上下文，4w都要清晰。把日志记录时刻的时间when、地点where（发生的函数，代码行）、什么数据或请求导致（who）。通过这些我们推出why，和how。知道为什么会记录成这样，有什么影响。</p>
+<h2 id="日志的级别"><a href="#日志的级别" class="headerlink" title="日志的级别"></a>日志的级别</h2><p>在程序中，日志也是分级别的，不同的级别表示日志的不同场景和用途。</p>
+<p>通常有如下级别：</p>
+<p>TRACE：打印最详尽，在开发过程中使用此级别。类似于单步调试，在发不到运营环境后应该屏蔽掉这个级别。</p>
+<p>DEBUG：指出细粒度信息事件对调试应用程序是非常有帮助的，主要用于开发过程中打印一些运行信息。</p>
+<p>INFO：消息在粗粒度级别上突出强调应用程序的运行过程。打印一些你感兴趣的或者重要的信息，这个可以用于生产环境中输出程序运行的一些重要信息，但是不能滥用，避免打印过多的日志。</p>
+<p>WARN： 表明会出现潜在错误的情形，有些信息不是错误信息，但是也要给程序员的一些提示。</p>
+<p>ERROR： 发生了错误事件，但仍然不影响系统的继续运行。打印错误和异常信息，需要记录后处理。</p>
+<p>FATAL： 指出每个严重的错误事件将会导致应用程序的退出。严重错误，直接停止程序。</p>
+<p>每一条日志都是以上级别中的一种，程序中通过配置默认打印的级别，控制哪些语句打印，哪些不打印。</p>
+<p>一般开发阶段使用DEBUG级别，线上运营阶段使用INFO或WARN级别。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="控制好日志的量"><a href="#控制好日志的量" class="headerlink" title="控制好日志的量"></a>控制好日志的量</h3><p>记录日志是旁路逻辑，和给用户使用的逻辑是互不影响的。但是日志会消耗程序性能，抢占给用户的计算机资源。所以在记录日志时，要控制好日志的量，不要因为记录日志而导致性能下降。</p>
+<p>有些同学会觉得，我的业务现在量也不大，多记些日志也没什么。勿以善小而不为。要养成好的习惯，如果没有这种意识，是没有机会做大业务量的程序的。即使有，也会出问题。</p>
+<p>即使量少，用户少，但是不保证程序运行的次数少。如果有个循环频繁调用，触发记录日志，也会导致出问题的。我就见过日志记录太多，把cpu给占满，机器连ssh都连不上。</p>
+<h3 id="日志中出现太多的特殊字符"><a href="#日志中出现太多的特殊字符" class="headerlink" title="日志中出现太多的特殊字符"></a>日志中出现太多的特殊字符</h3><p>看到有的同学在日志里，会写些特殊的字符串，例如「XXXXXXXXXX」。原因是为了好搜索。如果是为了解决号搜索的问题，使用有规则的格式，和有意义的名字是不是更好，把代码行号打进去是不是更容易搜索？而且大家还知道是什么意思。</p>
+<h3 id="注意日志级别"><a href="#注意日志级别" class="headerlink" title="注意日志级别"></a>注意日志级别</h3><p>一种是把DEBUG级别设置到生产环境。还有一种是在代码中没有日志级别的概念，都用一种级别，DEBUG或者ERROR。要么所有的日志在生产环境都打不出来，要么一下子全打出来了。</p>
+<h3 id="注意日志安全"><a href="#注意日志安全" class="headerlink" title="注意日志安全"></a>注意日志安全</h3><p>既然日志记录了这么多信息，要注意日志中的内容，不能什么都打。和用户隐私相关的要避免打印到日志中去。因为这些信息如果不影响查找bug，记录后容易泄露用户隐私。例如：用户的聊天记录、用户的密钥、用户的电话号码邮箱等。</p>
+<h3 id="日志可读性"><a href="#日志可读性" class="headerlink" title="日志可读性"></a>日志可读性</h3><p>尽量用英文，尽量少用中文，防止机器或网页有字符问题，造成不必要的查找麻烦。</p>
+<h2 id="几种有效的日志形式"><a href="#几种有效的日志形式" class="headerlink" title="几种有效的日志形式"></a>几种有效的日志形式</h2><p>以下这几种记录日志的形式都各有所长，值得大家学习。但是切记，都有好用的日志库，千万别自己实现，里面的水很深。</p>
+<h3 id="内存日志"><a href="#内存日志" class="headerlink" title="内存日志"></a>内存日志</h3><p>既然日志打印很耗费性能，一般是磁盘IO是瓶颈。但是在程序遇到问题时，还想把从程序开始，到出问题这段时间的日志都记录下来，怎么办呢？就用内存日志。</p>
+<p>申请一个共享内存变量，在程序的各个运行节点，都把要记录的日志信息存储在这个变量中。当程序出错，或者要crash后。用工具把这段内存dump下来，相当于一些栈信息打印出来。如果程序运行正常，当新的请求再开始执行时，重新清空变量，再继续记录。</p>
+<p>既记录了很多信息，有没有造成IO的花销，在寻找C++后台程序core的原因时是非常有用的一种方式。</p>
+<h3 id="远程日志"><a href="#远程日志" class="headerlink" title="远程日志"></a>远程日志</h3><p>既然打本机日志耗费IO性能，导致cpu使用率飙升。那么通过网络包，把信息发送给远端，尽量减轻本地记录日志负担。这也是一种好方法。远端有专门处理日志的程序，负责给日志入库，进行分析和索引。</p>
+<h3 id="染色日志"><a href="#染色日志" class="headerlink" title="染色日志"></a>染色日志</h3><p>当有用户反馈遇到问题时，但发现只是个例，其他用户并没有此问题时。可以给反馈问题的用户「染色」。日志程序在写日志时，只对染色的用户进行记录，其他的不记。</p>
+<h3 id="流水日志"><a href="#流水日志" class="headerlink" title="流水日志"></a>流水日志</h3><p>一般用于写接口，把每次写的原始参数给记下来。通过这些流水日志，能够恢复出记录的数据，用于备份或对账最终数据，或者提供给其他系统重写数据。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>日志是给人看的，要注意可读性。</p>
+<p>写日志时要注意不要影响程序性能，按需而记。</p>
+<p>日志在软件维护期间使用的最多，不要日志用时方恨少。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yunpengzhang.github.io/2019/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E5%9C%B0%E8%AE%B0%E6%97%A5%E5%BF%97/" data-id="clyu6o7110080arq549uq5rzf" data-title="程序员如何科学地记日志" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E8%BD%AF%E4%BB%B6%E7%AF%87/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          如何高效工作——个人软件篇
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/%E6%89%BE%E5%88%B0bug%E7%9A%84%E6%A0%B9%E6%BA%90%EF%BC%8C%E9%97%AE%E4%BA%94%E6%AC%A1%E4%B8%BA%E4%BB%80%E4%B9%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">找到bug的根源，问五次为什么</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%AD%A6%E4%B9%A0/">学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%9D%E8%80%83/">思考</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E5%B7%A7/">技巧</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AF%BB%E4%B9%A6/">读书</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%91%E6%AD%A5/">跑步</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">七月 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">十一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">十月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/07/">七月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/01/">一月 2014</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/12/">十二月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/10/">十月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/07/">七月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/06/">六月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/05/">五月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/01/">一月 2013</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/12/">十二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/11/">十一月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/10/">十月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/09/">九月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/07/">七月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/06/">六月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/05/">五月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/03/">三月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/02/">二月 2012</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/12/">十二月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/11/">十一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/10/">十月 2011</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B%20/">向着目标冲击——读《曼巴精神：科比自传》</a>
+          </li>
+        
+          <li>
+            <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+          </li>
+        
+          <li>
+            <a href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 owenzhang<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
