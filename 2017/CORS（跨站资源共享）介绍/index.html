@@ -18,13 +18,13 @@
 <meta property="og:description" content="起因有同学在nginx站点配置中加了一行Access-Control-Allow-Origin *,导致微信中业务数据异常，抓包看http头有两个Access-Control-Allow-Origin字段，一个是站点自己的域名，一个是*。 为了实现跨域资源访问，在代码和nginx配置中都加了Access-Control-Allow-Origin字段，但是浏览器有个原则，如果有两个Access-Co">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-12-03T08:14:36.000Z">
-<meta property="article:modified_time" content="2024-07-20T15:19:39.359Z">
+<meta property="article:modified_time" content="2024-07-20T15:40:53.975Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="icon" href="/assets/favorite.ico">
     <title>CORS（跨站资源共享）介绍 · owenzhang的博客</title>
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -468,7 +468,7 @@
             <p>原文作者：<a href="https://yunpengzhang.github.io">owenzhang</a>
             <p>原文链接：<a href="https://yunpengzhang.github.io/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">https://yunpengzhang.github.io/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/</a>
             <p>发表日期：<a href="https://yunpengzhang.github.io/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">December 3rd 2017, 8:14:36 am</a>
-            <p>更新日期：<a href="https://yunpengzhang.github.io/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">July 20th 2024, 3:19:39 pm</a>
+            <p>更新日期：<a href="https://yunpengzhang.github.io/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">July 20th 2024, 3:40:53 pm</a>
             <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     <!-- paginator -->
@@ -512,9 +512,7 @@
             <footer class="footer footer-unloaded">
     <!-- social  -->
         <div class="social">
-                            <a href="mailto:12345@qq.com" class="iconfont-archer email" title="email" ></a>
-                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title="github"></a>
-                <span class="iconfont-archer wechat" title="wechat">
+                            <span class="iconfont-archer wechat" title="wechat">
                     <img class="profile-qr" src="/assets/qr.jpeg" />
                 </span>
                 <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
