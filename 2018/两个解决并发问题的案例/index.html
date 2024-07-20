@@ -4,22 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>两个解决并发问题的案例 | owen的博客</title>
+  <title>两个解决并发问题的案例 | owenzhang的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="最近和zhiyong聊天，有两个关于并发的场景比较有意思，记录下思考的过程。 场景一A和B在微信里发消息，如果A发的消息顺序是A1，A2，A3，B发的消息顺序是B1，B2，B3。 两个问题：  如果A2由于网络原因，比A3后到服务器，B收到的消息是什么样的？ 如果都不丢消息，A1和B1同时发出，几乎同时到服务器，再分别传给A和B，那么在聊天窗口的表现是什么？  经过zhiyong的黑盒逆向测试，问">
 <meta property="og:type" content="article">
 <meta property="og:title" content="两个解决并发问题的案例">
 <meta property="og:url" content="https://yunpengzhang.github.io/2018/%E4%B8%A4%E4%B8%AA%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E6%A1%88%E4%BE%8B/index.html">
-<meta property="og:site_name" content="owen的博客">
+<meta property="og:site_name" content="owenzhang的博客">
 <meta property="og:description" content="最近和zhiyong聊天，有两个关于并发的场景比较有意思，记录下思考的过程。 场景一A和B在微信里发消息，如果A发的消息顺序是A1，A2，A3，B发的消息顺序是B1，B2，B3。 两个问题：  如果A2由于网络原因，比A3后到服务器，B收到的消息是什么样的？ 如果都不丢消息，A1和B1同时发出，几乎同时到服务器，再分别传给A和B，那么在聊天窗口的表现是什么？  经过zhiyong的黑盒逆向测试，问">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2018-05-21T14:15:19.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:47:04.851Z">
+<meta property="article:modified_time" content="2024-07-20T13:56:42.415Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -44,7 +44,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">owen的博客</a>
+        <a href="/" id="logo">owenzhang的博客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -132,7 +132,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yunpengzhang.github.io/2018/%E4%B8%A4%E4%B8%AA%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E6%A1%88%E4%BE%8B/" data-id="clyu6o706004varq5bd1cfclz" data-title="两个解决并发问题的案例" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yunpengzhang.github.io/2018/%E4%B8%A4%E4%B8%AA%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E6%A1%88%E4%BE%8B/" data-id="clyu70knc004wb0ooaqm00sfb" data-title="两个解决并发问题的案例" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

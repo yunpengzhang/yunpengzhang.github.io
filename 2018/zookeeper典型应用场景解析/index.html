@@ -4,25 +4,25 @@
   <meta charset="utf-8">
   
   
-  <title>zookeeper典型应用场景解析 | owen的博客</title>
+  <title>zookeeper典型应用场景解析 | owenzhang的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="zookeeper实现了主动通知节点变化，原子创建节点，临时节点，按序创建节点等功能。通过以上功能的组合， zookeeper能够在分布式系统中组合出很多上层功能。下面就看几个常用到的场景，及使用方式和注意事项。 名字服务(NameService)顾名思义，就是给分布式系统中的资源，使用人易于理解的名字，能够找到需要的资源。例如：一个统一接口系统，接收服务然后转给后端服务的具体server。当新增">
 <meta property="og:type" content="article">
 <meta property="og:title" content="zookeeper典型应用场景解析">
 <meta property="og:url" content="https://yunpengzhang.github.io/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/index.html">
-<meta property="og:site_name" content="owen的博客">
+<meta property="og:site_name" content="owenzhang的博客">
 <meta property="og:description" content="zookeeper实现了主动通知节点变化，原子创建节点，临时节点，按序创建节点等功能。通过以上功能的组合， zookeeper能够在分布式系统中组合出很多上层功能。下面就看几个常用到的场景，及使用方式和注意事项。 名字服务(NameService)顾名思义，就是给分布式系统中的资源，使用人易于理解的名字，能够找到需要的资源。例如：一个统一接口系统，接收服务然后转给后端服务的具体server。当新增">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper.jpg">
 <meta property="og:image" content="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper1-1.jpg">
 <meta property="article:published_time" content="2018-09-04T14:19:34.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:47:04.851Z">
+<meta property="article:modified_time" content="2024-07-20T13:56:42.415Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://www.owenzhang.net/blog/wp-content/uploads/2018/09/zookeeper.jpg">
   
-    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -47,7 +47,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">owen的博客</a>
+        <a href="/" id="logo">owenzhang的博客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -120,7 +120,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yunpengzhang.github.io/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/" data-id="clyu6o701004narq51hpoaeig" data-title="zookeeper典型应用场景解析" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yunpengzhang.github.io/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/" data-id="clyu70knb004sb0oobo9gbwb5" data-title="zookeeper典型应用场景解析" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

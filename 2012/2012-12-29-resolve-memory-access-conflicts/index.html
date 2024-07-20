@@ -4,22 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>解决内存读写冲突 | owen的博客</title>
+  <title>解决内存读写冲突 | owenzhang的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="最近遇到了几个内存读写冲突的场景： 1.内存hash读写冲突 一个进程写，多个进程读，当读进程找到要读取的指针时，写进程进行了写操作，然后回收了原先读进程要读的内存块。这时cpu又调度到读进程，读失败，返回错误给前端，重试ok。 由于业务场景可以容忍读到旧数据，最终采用的解决方法为延迟回收内存块，即内存回收前放到一个回收队列里，先不清理数据，过500ms后再回收数据，有重组的时间等待读冲突的读进程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解决内存读写冲突">
 <meta property="og:url" content="https://yunpengzhang.github.io/2012/2012-12-29-resolve-memory-access-conflicts/index.html">
-<meta property="og:site_name" content="owen的博客">
+<meta property="og:site_name" content="owenzhang的博客">
 <meta property="og:description" content="最近遇到了几个内存读写冲突的场景： 1.内存hash读写冲突 一个进程写，多个进程读，当读进程找到要读取的指针时，写进程进行了写操作，然后回收了原先读进程要读的内存块。这时cpu又调度到读进程，读失败，返回错误给前端，重试ok。 由于业务场景可以容忍读到旧数据，最终采用的解决方法为延迟回收内存块，即内存回收前放到一个回收队列里，先不清理数据，过500ms后再回收数据，有重组的时间等待读冲突的读进程">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2012-12-29T05:23:24.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:47:04.843Z">
+<meta property="article:modified_time" content="2024-07-20T13:56:42.411Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -44,7 +44,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">owen的博客</a>
+        <a href="/" id="logo">owenzhang的博客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -131,7 +131,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yunpengzhang.github.io/2012/2012-12-29-resolve-memory-access-conflicts/" data-id="clyu6o6zh002narq588pghelo" data-title="解决内存读写冲突" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yunpengzhang.github.io/2012/2012-12-29-resolve-memory-access-conflicts/" data-id="clyu70kmk002mb0oobbn91dvr" data-title="解决内存读写冲突" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

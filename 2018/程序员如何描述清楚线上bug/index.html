@@ -4,22 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>程序员如何描述清楚线上bug | owen的博客</title>
+  <title>程序员如何描述清楚线上bug | owenzhang的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="案例一个管理后台的bug，把操作记录中的操作员姓名，写成了该操作员的id。原因是修改了一个返回操作人姓名的函数，返回了操作人的id。但是还有其他地方也用这个函数，导致其他地方把姓名字段填写成了操作员的id。该bug污染了一条修改记录，操作员手动删除就好了。回滚代码后恢复。本质是修改了函数的返回值，却没有查看所有调用的地方。这个函数的名字叫getinfo，但是在代码的其他模块中也有同名函数，返回的都">
 <meta property="og:type" content="article">
 <meta property="og:title" content="程序员如何描述清楚线上bug">
 <meta property="og:url" content="https://yunpengzhang.github.io/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E6%8F%8F%E8%BF%B0%E6%B8%85%E6%A5%9A%E7%BA%BF%E4%B8%8Abug/index.html">
-<meta property="og:site_name" content="owen的博客">
+<meta property="og:site_name" content="owenzhang的博客">
 <meta property="og:description" content="案例一个管理后台的bug，把操作记录中的操作员姓名，写成了该操作员的id。原因是修改了一个返回操作人姓名的函数，返回了操作人的id。但是还有其他地方也用这个函数，导致其他地方把姓名字段填写成了操作员的id。该bug污染了一条修改记录，操作员手动删除就好了。回滚代码后恢复。本质是修改了函数的返回值，却没有查看所有调用的地方。这个函数的名字叫getinfo，但是在代码的其他模块中也有同名函数，返回的都">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2018-12-16T11:54:36.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:47:04.851Z">
+<meta property="article:modified_time" content="2024-07-20T13:56:42.419Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -44,7 +44,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">owen的博客</a>
+        <a href="/" id="logo">owenzhang的博客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -119,7 +119,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yunpengzhang.github.io/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E6%8F%8F%E8%BF%B0%E6%B8%85%E6%A5%9A%E7%BA%BF%E4%B8%8Abug/" data-id="clyu6o70j006aarq51tro6cwr" data-title="程序员如何描述清楚线上bug" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yunpengzhang.github.io/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E6%8F%8F%E8%BF%B0%E6%B8%85%E6%A5%9A%E7%BA%BF%E4%B8%8Abug/" data-id="clyu70knp006ab0ooc8nyhjor" data-title="程序员如何描述清楚线上bug" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

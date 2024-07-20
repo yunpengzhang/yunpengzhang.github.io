@@ -4,22 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>随机端口复用导致丢包的问题及解决方法 | owen的博客</title>
+  <title>随机端口复用导致丢包的问题及解决方法 | owenzhang的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="因为redhad随机分配端口和suse策略不同，导致有随机分配端口的业务迁移到redhad上会 出现端口被抢占而丢包的问题。 解决方法： 【方法一】创建socket的时候，setsockopt函数设置绑定端口socket的属性为不可重用的。 【方法二】控制绑定端口范围在32768以下。 **0.**抢占的原则是什么？ **      **   顺序和系统实现有关，我们公司的suse和redhad都">
 <meta property="og:type" content="article">
 <meta property="og:title" content="随机端口复用导致丢包的问题及解决方法">
 <meta property="og:url" content="https://yunpengzhang.github.io/2013/2013-05-27-random-port-multiplexing-and-packet-loss-problems-and-solutions/index.html">
-<meta property="og:site_name" content="owen的博客">
+<meta property="og:site_name" content="owenzhang的博客">
 <meta property="og:description" content="因为redhad随机分配端口和suse策略不同，导致有随机分配端口的业务迁移到redhad上会 出现端口被抢占而丢包的问题。 解决方法： 【方法一】创建socket的时候，setsockopt函数设置绑定端口socket的属性为不可重用的。 【方法二】控制绑定端口范围在32768以下。 **0.**抢占的原则是什么？ **      **   顺序和系统实现有关，我们公司的suse和redhad都">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2013-05-27T04:59:01.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:47:04.843Z">
+<meta property="article:modified_time" content="2024-07-20T13:56:42.411Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -44,7 +44,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">owen的博客</a>
+        <a href="/" id="logo">owenzhang的博客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -138,7 +138,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yunpengzhang.github.io/2013/2013-05-27-random-port-multiplexing-and-packet-loss-problems-and-solutions/" data-id="clyu6o6zl002zarq5cip1dt9s" data-title="随机端口复用导致丢包的问题及解决方法" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yunpengzhang.github.io/2013/2013-05-27-random-port-multiplexing-and-packet-loss-problems-and-solutions/" data-id="clyu70kmp0034b0oo3qb22abt" data-title="随机端口复用导致丢包的问题及解决方法" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       

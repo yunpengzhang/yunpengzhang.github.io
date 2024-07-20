@@ -4,25 +4,25 @@
   <meta charset="utf-8">
   
   
-  <title>简单高效的排行榜算法——树状数组 | owen的博客</title>
+  <title>简单高效的排行榜算法——树状数组 | owenzhang的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="0 问题场景在互联网业务中，为了刺激玩家活跃度，通常都会制作榜单，让用户能够看到自己在榜单中的名次。用户要看到的内容是：新的分数排行是多少名，相比之前是前进了，还是后退了，具体前进后退的数值是多少。例如充值排行榜，游戏分排行榜，活跃度排行榜等。由于互联网用户基数大，有些平台参与排行的用户可以达到上千万。但是排行榜最重要的就是时效性，能够让用户越早看到排行更新越好。 对于庞大的榜单，每次其中一个元素">
 <meta property="og:type" content="article">
 <meta property="og:title" content="简单高效的排行榜算法——树状数组">
 <meta property="og:url" content="https://yunpengzhang.github.io/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/index.html">
-<meta property="og:site_name" content="owen的博客">
+<meta property="og:site_name" content="owenzhang的博客">
 <meta property="og:description" content="0 问题场景在互联网业务中，为了刺激玩家活跃度，通常都会制作榜单，让用户能够看到自己在榜单中的名次。用户要看到的内容是：新的分数排行是多少名，相比之前是前进了，还是后退了，具体前进后退的数值是多少。例如充值排行榜，游戏分排行榜，活跃度排行榜等。由于互联网用户基数大，有些平台参与排行的用户可以达到上千万。但是排行榜最重要的就是时效性，能够让用户越早看到排行更新越好。 对于庞大的榜单，每次其中一个元素">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://yunpengzhang.github.io/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/640.png">
 <meta property="og:image" content="https://yunpengzhang.github.io/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/640-20240720163708514.png">
 <meta property="article:published_time" content="2019-10-09T10:00:03.000Z">
-<meta property="article:modified_time" content="2024-07-20T13:47:04.859Z">
+<meta property="article:modified_time" content="2024-07-20T13:56:42.423Z">
 <meta property="article:author" content="owenzhang">
 <meta property="article:tag" content="后端,架构,读书,运动,写作">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://yunpengzhang.github.io/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/640.png">
   
-    <link rel="alternate" href="/atom.xml" title="owen的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -47,7 +47,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">owen的博客</a>
+        <a href="/" id="logo">owenzhang的博客</a>
       </h1>
       
         <h2 id="subtitle-wrap">
@@ -178,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yunpengzhang.github.io/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" data-id="clyu6o7120084arq51fffaydj" data-title="简单高效的排行榜算法——树状数组" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yunpengzhang.github.io/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" data-id="clyu70ko70084b0oo359tf39y" data-title="简单高效的排行榜算法——树状数组" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
