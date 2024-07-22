@@ -417,6 +417,82 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2017/%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E5%9C%A8%E7%BA%BF%E6%97%B6%E9%95%BF/">
+                <span class="abstract-title-text">如何计算在线时长</span>
+            </a>
+            <div class="abstract-content">
+                问题员工会登录一个内部服务系统，登录后可以选择休息或工作状态，下班时选择离开。有一个页面要实时展示员工当天休息和工作的累计时长。
+有两个数据库表存储员工的数据。
+员工状态表：存储员工的当前状态。
+员工状态流水表：每次员工状态切换，存储一条日志，记录切换发生的时间，切换前状态，切换后状态。
+解决先建立问题的模型，一个状态图，是员工状态切换的本质。
+如下，员工有三种状态，在状态切换时才会有时长被计算进去。其中红色的表示计算为休息时长，蓝色表示工作时长。即从休息状态转出的记录为休息时长，工作状态转出的记录为工作时长。
+
+
+建立一个新表，存储用户最近一次状态，和状态的获取时间点。还有用户当前的累...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/06</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/%E8%AF%B4%E8%AF%B4%E6%88%91%E4%BB%AC%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%AD%A6%E5%99%A8/">
+                <span class="abstract-title-text">说说我们的负载均衡武器</span>
+            </a>
+            <div class="abstract-content">
+                最近发现，组内的小伙伴对负载均衡组件有哪些还不清楚，总结了下，希望对大家能有写用处。
+当用户点击了一次页面，到后端server执行完返回，经过了好几次传递，每次上游调用下游，都要使用负载均衡组件。
+使用负载均衡组件有什么好处？
+
+自动选择存活的服务器，剔除掉“死掉”的服务。
+保证请求能够按照分配均匀地分给服务端。
+服务端增减机器，修改配置，对客户端透明。
+
+以上几点最深的体会就是。
+作为服务端，不必急急忙忙地恢复死掉的服务，只要有存活的节点存在即可。因为有时你可能正在吃饭或睡觉。
+作为客户端，服务端更换你不必配合发布，减少工作量，代码不用做业务外的特殊逻辑。
+下面我们从前到后一次看看都有...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/04</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">
+                <span class="abstract-title-text">CORS（跨站资源共享）介绍</span>
+            </a>
+            <div class="abstract-content">
+                起因有同学在nginx站点配置中加了一行Access-Control-Allow-Origin *,导致微信中业务数据异常，抓包看http头有两个Access-Control-Allow-Origin字段，一个是站点自己的域名，一个是*。 为了实现跨域资源访问，在代码和nginx配置中都加了Access-Control-Allow-Origin字段，但是浏览器有个原则，如果有两个Access-Control-Allow-Origin字段，那么都失效，哪个都不信。最终导致了微信中打开异常。 也引出了CORS。
+定义和原理什么是CORS跨站资源共享？
+
+跨站源资源共享（CORS）是一份浏览器...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/03</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2017/jump%20Consistent%20hash%E4%BB%8B%E7%BB%8D/">
                 <span class="abstract-title-text">jump Consistent hash介绍</span>
             </a>
@@ -429,7 +505,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/24</span>
                 </div>
                 <!-- tags -->
@@ -449,7 +525,7 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/17</span>
                 </div>
                 <!-- tags -->
@@ -476,7 +552,7 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/07/17</span>
                 </div>
                 <!-- tags -->
@@ -501,7 +577,7 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/05/21</span>
                 </div>
                 <!-- tags -->
@@ -523,7 +599,7 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/02/19</span>
                 </div>
                 <!-- tags -->
@@ -551,7 +627,7 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/06</span>
                 </div>
                 <!-- tags -->
@@ -578,74 +654,8 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/12/02</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2016/python%E5%8F%82%E6%95%B0/">
-                <span class="abstract-title-text">python参数</span>
-            </a>
-            <div class="abstract-content">
-                问题12345678910111213#/usr/bin/python def func(a = []):    a.append(1)    return a b = [] b = func()print bb = []b = func()       print b
-
-实际的打印结果是
-12[1][1, 1]
-
-如果在C++ 里，两次打印的结果不应该有变化，而在python里，函数参数和变量赋值的规则和C++ 是不同的。
-在C++中，每次调用函数时，参数是每次函数调用时在栈上重新生成赋值的，是把值放到变量所表示的地址里。
-那么，在python中呢？python也是每次把值的地址赋值给...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/07/15</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2013/2014-01-31-i_think_not_all_think/">
-                <span class="abstract-title-text">想要的总能找到</span>
-            </a>
-            <div class="abstract-content">
-                最近在网上买东西，发现不管什么物品，在网站上都有好评和差评，而且有时评论的几乎都是一个特性。例如：同一款路由器，好评里说穿墙能力强，差评里说穿墙能力弱。都振振有词，可能是不同的建筑，使用环境，或不同批次的货品的差异。但是发现个现象，最终还是心里想买哪款，最后就买哪款。寻找的过程只不过是增强下决心。因为网络已经太大了，只要你心里有个想法，都能在网上找到相同的声音，而人也不自觉地过滤掉不同的声音，用相同的意见来巩固自己的观点。
-买东西，主要看下产品属性，价格是否合适。查下是否有明显的缺点，剩下就follow your heart就可以了。
-卖东西的，也有办法，只要能把产品的口碑做起来，加上宣...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2014/01/31</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2013/2013-12-12-impression_of_a_sharing/">
-                <span class="abstract-title-text">一场分享中的感悟</span>
-            </a>
-            <div class="abstract-content">
-                今天听了一次分享，是某游戏公司的老板分享的。通篇内容幽默诙谐，主要是事迹介绍，扯淡居多。但是从中还是学到很多东西。
-##浪潮之巅在端游还不错时选择做页游，在页游不错时选择做手游，最后成功！其中做了一些断臂的事情，有时人越想得到的多，越会失去的多。因为你的精力不集中，注定会错失机会。
-要找到当今的风向和浪潮。不是你擅长什么去做什么，而是时代需要什么去做什么，要做对的事，而不是会的时。都已经过时的东西就不要再耗精力往里面去了，就像浪潮之巅里写的一样，要认准大势，逆流而上的最终结果都很悲惨。
-有时以为自己很牛逼，什么都能干成，但是光有信心还是不够的，更多的还是要认清形式，顺势而上。也不是什么火...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2013/12/12</span>
                 </div>
                 <!-- tags -->
             </div>
@@ -858,9 +868,12 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
         
         
         
+        
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 147
+        Total : 150
         </div>
         <!-- search  -->
     </div>
@@ -868,8 +881,20 @@ Consistent hashing is a special kind of hashing such that when a hash table is r
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2024/%E8%B7%A8%E6%96%87%E5%8C%96%E6%B2%9F%E9%80%9A%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/">跨文化沟通课程笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">07/11</span>
             <a class="archive-post-title" href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B/">向着目标冲击——读《曼巴精神：科比自传》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2024/%E8%84%91%E6%B4%9E%E5%A4%A7%E5%BC%80%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8AWhat-if%EF%BC%9F%E9%82%A3%E4%BA%9B%E5%8F%A4%E6%80%AA%E5%8F%88%E8%AE%A9%E4%BA%BA%E5%BF%A7%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%8B/">脑洞大开——读《What if？那些古怪又让人忧心的问题》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">crazy matching想到的数学原理</a>
         </li>
                 </ul>
             <div class="archive-year"> 2020 </div>

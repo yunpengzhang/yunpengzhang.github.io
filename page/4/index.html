@@ -417,6 +417,67 @@
                 <main class="main index-page">
             
         <article class="index-post">
+            <a class="abstract-title" href="/2019/%E6%89%BE%E5%88%B0bug%E7%9A%84%E6%A0%B9%E6%BA%90%EF%BC%8C%E9%97%AE%E4%BA%94%E6%AC%A1%E4%B8%BA%E4%BB%80%E4%B9%88/">
+                <span class="abstract-title-text">找到bug的根源，问五次为什么</span>
+            </a>
+            <div class="abstract-content">
+                在学习《问题分析与解决》时学到了一种找到问题根源的方法——问五次为什么。具体内容是：当遇到一个问题，不要只看当前答案，要继续往下问，为什么，连问五次，就能够找到更深层次的问题。 最近在复盘bug的时候，也使用了这种方法，屡试不爽。
+案例前端发布后，页面按钮点击失效，用户反馈问题，前端回滚代码后恢复。 问题一、为什么按钮点击会失效？ 因为前端代码写出了一个bug，没有对空对象进行判空，导致页面js抛出异常，按钮失效。 一般到这里就结束了，把代码加上对象判空，继续发布就完成了。 但是大家集思广益，问五次为什么，看看是否有新的发现。 之后又问了几个为什么，果真有收获。 问题二、为什么是用户反馈...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/25</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2019/%E7%99%BE%E5%88%86%E4%B9%8B%E4%B9%9D%E5%8D%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E9%83%BD%E7%8A%AF%E8%BF%87%E7%9A%84%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF/">
+                <span class="abstract-title-text">90%的程序员都犯过的代码错误</span>
+            </a>
+            <div class="abstract-content">
+                最近参加了多次的代码review会，在review的过程中，发现有些问题几乎每次都出现。挑了几个比较典型的问题讲解下。这几个问题都是初级问题，解决方法都很容易。只要掌握了方法，有意识避免，能让短时间内迅速提高代码质量。真所谓投入小，见效快。
+变量命名不清晰，一词多义为变量命名时最重要的考虑事项是，该名字要完全、准确地描述出该变量所代表的事务。容易阅读，不会与其他事务混淆。
+例如：
+1234if(staff_id == 0)&#123;	printf(&quot;系统归档，不是员工归档&quot;);&#125;
+上面这段代码，staff_id是员工号的意思，用staff_id为0表示是系...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/23</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
+            <a class="abstract-title" href="/2019/%E5%86%B3%E7%AD%96%E7%9A%84%E8%A6%81%E7%B4%A0/">
+                <span class="abstract-title-text">决策的要素</span>
+            </a>
+            <div class="abstract-content">
+                管理者工作中，很大一部分就是决策。如何作出有效的决策？先要了解有效决策的几个要素：
+一、了解问题的性质做决策前先对当前问题进行思考，是经常性问题，还是偶然性问题。如果是偶然性问题，把它恢复原状就完成了。如果是经常性问题，要制定一套规则来解决。
+经常会混的是本质是经常性问题，但是被误以为偶然性问题，要仔细分析。例如运营环境总出现发错消息的事故，每一次看着原因都不同，都很偶然，不是配置错了，就是代码bug。如果当作偶然性问题，头痛医头脚痛医脚，每次都打补丁，看似解决，实则危机四伏。本质是对发消息机制的检查不够，包括权限流程检查，代码审查，运营异常监控。这三方面哪方面做了，都能拦住最后的事故，...
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/08</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+            
+        <article class="index-post">
             <a class="abstract-title" href="/2018/%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E8%A6%81%E4%BA%8B%E4%BC%98%E5%85%88/">
                 <span class="abstract-title-text">如何做到要事优先</span>
             </a>
@@ -427,7 +488,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/23</span>
                 </div>
                 <!-- tags -->
@@ -446,7 +507,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/16</span>
                 </div>
                 <!-- tags -->
@@ -476,7 +537,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/16</span>
                 </div>
                 <!-- tags -->
@@ -498,7 +559,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/16</span>
                 </div>
                 <!-- tags -->
@@ -520,7 +581,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/16</span>
                 </div>
                 <!-- tags -->
@@ -546,7 +607,7 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/05</span>
                 </div>
                 <!-- tags -->
@@ -568,70 +629,8 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/05</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E4%BA%A4%E4%BB%A3%E6%B8%85%E6%A5%9A%E4%BA%8B%E6%83%85%EF%BC%88%E6%9C%AA%E5%AE%8C%EF%BC%89/">
-                <span class="abstract-title-text">程序员如何交代清楚事情</span>
-            </a>
-            <div class="abstract-content">
-                有个项目要推动别人修改，或者有个会议要邀请别人审批。结果程序员在群里说了很多，最后没有人回答，整个群里都是一个人的语言，很尴尬。
-如果让别人做事情，要先交代好背景，然后指出，让每个人干什么，需要什么支持，必要时直接@某个人。让人家知道要干什么。不要一直说，特别是很多人的群，大家都不知道到底要人家干啥。
-
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/05</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E2%80%94%E2%80%94%E3%80%8A%E7%AE%A1%E7%90%86%E8%80%85%E5%A6%82%E4%BD%95%E5%8F%91%E6%8C%A5%E4%BA%BA%E7%9A%84%E9%95%BF%E5%A4%84%E3%80%8B/">
-                <span class="abstract-title-text">第四章——《管理者如何发挥人的长处》</span>
-            </a>
-            <div class="abstract-content">
-                思考组织把人集中在一起，要想发挥作用，达到目标，必须用人所长。通过运用每个人的长处，共同完成任务。就像一个篮球队，队员的身材、技能、脾气都不同，但是发挥每个球员的长处，才能让球队取得好的成绩。
-如何发挥每个人的长处，作为管理者，要能看到每个人的长处，而不是关心每个人的不足。关心每个人贡献什么，而不是他不能做什么。让每个人发挥自己的长处，才是最重要的，对组织才是最有利的。
-要了解一个人的长处，才能对他的绩效提出要求，提出更有挑战的绩效目标。能够充分调用积极性，发挥自身长处。用人的时候，必须能够容忍人的短处。（这里说的短处是有底线的，指的是在技能或其他方面对组织无害的短处。如果突破了道德，或...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/12/05</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E5%A5%BD%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">
-                <span class="abstract-title-text">程序员如何处理好时区问题</span>
-            </a>
-            <div class="abstract-content">
-                写国际化的程序，经常会遇到两种问题：字符编码、时间问题。今天我们就聊聊程序中如何处理时间问题。
-首先，要了解一些基本的概念，只有对概念有清晰的掌握，才能明白解决方法。
-基本概念GMT时间：格林尼治标准时间（英语：Greenwich Mean Time，GMT）是指位于英国伦敦郊区的皇家格林尼治天文台当地的平太阳时，因为本初子午线被定义为通过那里的经线。
-由于地球每天的自转是有些不规则的，而且正在缓慢减速，因此格林尼治平时基于天文观测本身的缺陷，已经被原子钟报时的协调世界时（UTC）所取代。
-UTC时间：协调世界时（英语：Coordinated Universal Time，法语：Temp...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/25</span>
                 </div>
                 <!-- tags -->
             </div>
@@ -844,9 +843,12 @@ UTC时间：协调世界时（英语：Coordinated Universal Time，法语：Tem
         
         
         
+        
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 147
+        Total : 150
         </div>
         <!-- search  -->
     </div>
@@ -854,8 +856,20 @@ UTC时间：协调世界时（英语：Coordinated Universal Time，法语：Tem
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2024/%E8%B7%A8%E6%96%87%E5%8C%96%E6%B2%9F%E9%80%9A%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/">跨文化沟通课程笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">07/11</span>
             <a class="archive-post-title" href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B/">向着目标冲击——读《曼巴精神：科比自传》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2024/%E8%84%91%E6%B4%9E%E5%A4%A7%E5%BC%80%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8AWhat-if%EF%BC%9F%E9%82%A3%E4%BA%9B%E5%8F%A4%E6%80%AA%E5%8F%88%E8%AE%A9%E4%BA%BA%E5%BF%A7%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%8B/">脑洞大开——读《What if？那些古怪又让人忧心的问题》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">crazy matching想到的数学原理</a>
         </li>
                 </ul>
             <div class="archive-year"> 2020 </div>

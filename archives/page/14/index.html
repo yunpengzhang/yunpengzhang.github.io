@@ -408,6 +408,82 @@
             <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
             <div class="container container-unloaded">
                 <main class="main index-page">
+        <article class="index-post">
+            <a class="abstract-title" href="/2012/2012-06-01-mysql-database-to-achieve-two-master-slave-synchronization-between/">
+                <span class="abstract-title-text">实现两个Mysql数据库之间的主从同步</span>
+            </a>
+            <div class="abstract-content">
+                <p>主要参考《实现两个Mysql数据库之间的主从同步》<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/guoguo1980/article/details/2343722">http://blog.csdn.net/guoguo1980/article/details/2343722</a>的文章。</p>
+<p>注意：两个mysql的<strong>版本要相同</strong>，否则会有问题。</p>
+<h6 id="一、在master机器。"><a href="#一、在master机器。" class="headerlink" title="一、在master机器。"></a><strong>一、在master机器。</strong></h6><p>1.在master机器上建立帐户并赋予权限。</p>
+<pre><code>grant SUPER,REPLICATION CLIENT on *.* to &#39;backup&#39;@&#39;xxx.xxx.xxx.xxx&#39; identified by &#39;1234&#39;;
+grant replication slave on *.* to &#39;backup&#39;@&#39;xxx.xxx.xxx.xxx&#39; identified by &#39;1234&#39;;
+grant file on *.* to &#39;backup&#39;@&#39;xxx.xxx.xxx.xxx&#39; identified by &#39;1234&#39;;
+</code></pre>
+<p>2、增加一个数据库作为同步数据库：</p>
+<pre><code>create database test;
+</code></pre>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2012/06/01</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2012/2012-05-02-improve-efficiency-use-awk-instead-of-reading-a-file-shell/">
+                <span class="abstract-title-text">提高效率——使用awk代替shell读文件</span>
+            </a>
+            <div class="abstract-content">
+                <p>对一个号码文件进行操作，调用的处理事件越来越慢。</p>
+<p>曲线如下</p>
+<img src="/2012/2012-05-02-improve-efficiency-use-awk-instead-of-reading-a-file-shell/image-20240718172040309.png" class="" title="image-20240718172040309">
+
+<p>脚本大致如下：</p>
+<p>#!&#x2F;bin&#x2F;bash</p>
+<p>while read seq</p>
+<p>do</p>
+<p>echo $seq</p>
+<p>done &lt; seq.dat
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2012/05/02</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2012/linux%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E2%80%94%E2%80%94cpu%E3%80%81memory%E3%80%81io%E3%80%81network/">
+                <span class="abstract-title-text">Linux性能监控——CPU、Memory、IO、Network</span>
+            </a>
+            <div class="abstract-content">
+                <p>一、CPU</p>
+<p>1、良好状态指标</p>
+<ul>
+<li>CPU利用率：User Time &lt;&#x3D; 70%，System Time &lt;&#x3D; 35%，User Time + System Time &lt;&#x3D; 70%。</li>
+<li>上下文切换：与CPU利用率相关联，如果CPU利用率状态良好，大量的上下文切换也是可以接受的。</li>
+<li>可运行队列：每个处理器的可运行队列&lt;&#x3D;3个线程。</li>
+</ul>
+<p>2、监控工具</p>
+            </div>
+            <!-- read more -->
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2024/07/22">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2012/03/13</span>
+                </div>
+                <!-- tags -->
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
             
         <article class="index-post">
             <a class="abstract-title" href="/2012/2012-02-16-remove-svn-directories/">
@@ -426,7 +502,7 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2012/02/16</span>
                 </div>
                 <!-- tags -->
@@ -452,7 +528,7 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2012/02/16</span>
                 </div>
                 <!-- tags -->
@@ -469,7 +545,7 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2012/02/08</span>
                 </div>
                 <!-- tags -->
@@ -486,7 +562,7 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/12/04</span>
                 </div>
                 <!-- tags -->
@@ -504,7 +580,7 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/11/20</span>
                 </div>
                 <!-- tags -->
@@ -522,7 +598,7 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/11/07</span>
                 </div>
                 <!-- tags -->
@@ -539,68 +615,8 @@ find命令将所有匹配到的文件一起传递给exec执行,有些系统对�
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
+                <div class="abstract-date" title="Last updated: 2024/07/22">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/11/06</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-            
-        <article class="index-post">
-            <a class="abstract-title" href="/2011/2011-10-26-internet-design-ideas-miscellany/">
-                <span class="abstract-title-text">互联网设计想法杂记</span>
-            </a>
-            <div class="abstract-content">
-                睡觉前总结下最近对互联网项目设计的想法
-
-keep it simple and stupid.尽量的保证设计的简单，能把复杂的事情变简单才是最重要的，只要性能可以满足，那么哪个方法简单采用哪个方法，最好能够让心接项目的人在听你讲一遍就知道什么意思，哪怕不看代码也能够想到怎么实现。
-
-用多少设计多少。设计最怕过度设计，一个需求如果看不到那么远，最好现在需要什么就设计什么，不要想我后面还加什么东西，保留一大堆保留字。这样会让开始设计就变得复杂，而且真到扩展的时候才发现，预留的那些功能是不够的，即使够也捉襟见肘。
-
-架构就是把复杂的东西变简单。不要以为越复杂越庞大的架构越牛，真正好的架构是利用...
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/10/26</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2011/2011-10-18-e7ad89e5be85/">
-                <span class="abstract-title-text">等待</span>
-            </a>
-            <div class="abstract-content">
-                <p>坐车要塞车等，吃饭要排队等，坐在电视机前看广告等节目播放，薪水上调需要等……生活需要等的东西太多了，每天都在等待中迎来一件件好事，坏事，惊奇。等待，是通往结果的过程，是一段旅程的中间经历。是见到亲人前坐的火车，是高考前一页页的习题，是到达终点前的艰苦训练。等待，无处不在，大家都在某个期待结果之前便构成了等待。我们，都在等待死亡，不管你是愿意还是不愿意，也不管你体没体会到还是没发现。</p>
-<p>那么，我们要用什么样的心态等待呢？因人而异，不过火急火燎，心急如焚什么都干不了是不行的。我们只是等吗？当然不是。如果站在原地，什么都不做，是等不到答案的，等到的只是失望和事与愿违。</p>
-<p>等待，要有积极的行动。大雁等待过冬是不会收起翅膀的，人们等待愿望的实现也是需要行动才行。理想实现的过程大多是艰辛，令人痛苦，正是如此，也让人难忘。在通往终点的道路上要有积极的行动，想办法如何才能更加靠近目标，如何才能缩短于终点的距离，加强自己的能力，努力积极的行动，才是不二的选择，才能尽早的等来想要的结果，才能不浪费掉这段过程并培养自己。
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/10/18</span>
-                </div>
-                <!-- tags -->
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2011/2011-10-18-snowball/">
-                <span class="abstract-title-text">滚雪球 </span>
-            </a>
-            <div class="abstract-content">
-                <p><strong>案例</strong><br><strong>基本情况</strong><br>如下图，进程A是一个单进程系统，通过udp套接字接收前端请求进行处理。在处理过程中，需要访问后端系统B，是同步的方式访问后端系统B，根据后端系统B的SLA，超时时间设置是100ms。前端用户请求的超时时间是1s。</p>
-            </div>
-            <!-- read more -->
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2024/07/21">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2011/10/18</span>
                 </div>
                 <!-- tags -->
             </div>
@@ -793,9 +809,12 @@ keep it simple and stupid.尽量的保证设计的简单，能把复杂的事情
         
         
         
+        
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 147
+        Total : 150
         </div>
         <!-- search  -->
     </div>
@@ -803,8 +822,20 @@ keep it simple and stupid.尽量的保证设计的简单，能把复杂的事情
             <div class="archive-year"> 2024 </div>
             <ul class="year-list">
         <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2024/%E8%B7%A8%E6%96%87%E5%8C%96%E6%B2%9F%E9%80%9A%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/">跨文化沟通课程笔记</a>
+        </li>
+        <li class="archive-post-item">
             <span class="archive-post-date">07/11</span>
             <a class="archive-post-title" href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B/">向着目标冲击——读《曼巴精神：科比自传》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2024/%E8%84%91%E6%B4%9E%E5%A4%A7%E5%BC%80%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8AWhat-if%EF%BC%9F%E9%82%A3%E4%BA%9B%E5%8F%A4%E6%80%AA%E5%8F%88%E8%AE%A9%E4%BA%BA%E5%BF%A7%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%8B/">脑洞大开——读《What if？那些古怪又让人忧心的问题》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">crazy matching想到的数学原理</a>
         </li>
                 </ul>
             <div class="archive-year"> 2020 </div>

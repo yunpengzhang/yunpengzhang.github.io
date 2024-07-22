@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="owenzhang">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="owenzhang">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,后台,架构,互联网">
+    <meta name="description" content="">
+    <meta name="description" content="周末和孩子玩一种卡牌叫「crazy matching」，发现很有数学规律，后面研究了下还挺有意思。 包装盒上印着的就叫「crazy matching」，玩法也很简单，随机翻两张牌，看谁先找到两张牌相同的图案。用来训练小孩子的反应速度。 突然想到一个问题：任意两张牌有且仅有一个卡通物品相同，一副牌55张，最少要设计多少个卡通物品？要怎么生成一副牌？ 例如下图的四张牌，任意两张仅有1个卡通相同。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="crazy matching想到的数学原理">
+<meta property="og:url" content="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="owenzhang的博客">
+<meta property="og:description" content="周末和孩子玩一种卡牌叫「crazy matching」，发现很有数学规律，后面研究了下还挺有意思。 包装盒上印着的就叫「crazy matching」，玩法也很简单，随机翻两张牌，看谁先找到两张牌相同的图案。用来训练小孩子的反应速度。 突然想到一个问题：任意两张牌有且仅有一个卡通物品相同，一副牌55张，最少要设计多少个卡通物品？要怎么生成一副牌？ 例如下图的四张牌，任意两张仅有1个卡通相同。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86">
+<meta property="og:image" content="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86">
+<meta property="article:published_time" content="2024-06-04T07:40:18.000Z">
+<meta property="article:modified_time" content="2024-07-22T10:06:36.031Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favorite.ico">
+    <title>crazy matching想到的数学原理 · owenzhang的博客</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+        <script>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?84af242fe29877e06dc0eb4517cf7991";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">owenzhang的博客</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">owenzhang的博客</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">crazy matching想到的数学原理</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                crazy matching想到的数学原理
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">900</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2024/06/04</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>周末和孩子玩一种卡牌叫「crazy matching」，发现很有数学规律，后面研究了下还挺有意思。</p>
+<p>包装盒上印着的就叫「crazy matching」，玩法也很简单，随机翻两张牌，看谁先找到两张牌相同的图案。用来训练小孩子的反应速度。</p>
+<p>突然想到一个问题：任意两张牌有且仅有一个卡通物品相同，一副牌55张，最少要设计多少个卡通物品？要怎么生成一副牌？</p>
+<p>例如下图的四张牌，任意两张仅有1个卡通相同。</p>
+<img src="/2024/crazy-matching想到的数学原理/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"  alt="图片" style="zoom:25%;" />
+
+<p>当天没有想出来，后来和组内的小伙伴问了下，他也没想出来，但是给我到知乎找了两个帖子</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/346371561?utm_id=0">https://www.zhihu.com/question/346371561?utm_id=0</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/309408759?utm_id=0">https://www.zhihu.com/question/309408759?utm_id=0</a></p>
+<p>很遗憾，这两个帖子都没看懂，不过还是有很大收获的。</p>
+<p>在国外叫多比那尔套牌（Dobble或Spot it!），crazy matching应该是国内起的名字。</p>
+<p>已经有人研究过数学原理，不过我没看懂😅，用空间几何来解决，还可以用向量。</p>
+<p>后来我想用程序枚举，随机生成再检验。还没写出程序时，突然有了对向量的灵感。用excel模拟了下，竟然构造出了答案。</p>
+<p>如果要构造一副牌，最简单的方式55张牌相同的都是同一个卡通。55张牌共有55*7+1种卡通，得到上限。除了1个图案相同，剩下每张牌其余7个图案都不同。</p>
+<p>如何得到下限呢？用表格模拟向量，构造一副牌。</p>
+<p>具体方法如下：</p>
+<ol start="0">
+<li>每一列代表一张牌，每一行代表一种卡通图案。一列中为1的行，表式这张牌拥有的卡通图案的编号。</li>
+<li>生成第一张牌：第一列表式用1-8编号的卡通，凑成一张牌。</li>
+<li>生成第二张牌：第二列有1号卡通，但是不能有2-8号卡通，有9-15号卡通。把第二列从9-15行都置为1。</li>
+<li>生成第三张牌：第三列是有1号卡通，但不能和前两列重复其他牌，要新增22-29号卡通。</li>
+</ol>
+<p>以此类推，构造出8号牌，此时一共用了57个卡通。</p>
+<p>这8张牌，任意两张有且仅有1张相同，相同的卡通在1-8号卡通集合中。</p>
+<p>行越多，用的卡通越多。在构造第9张牌的时候，我们尝试用2号牌作为重复牌，然后复用已有的57个卡通，保证新增的牌任意两张只有1个卡通相同。</p>
+<p>所以第9张牌，剩下的7个卡通，从2-7号牌各取一个相同卡通，构造如下图，仍然能够保证有且仅有1个卡通相同。</p>
+<p>以此类推构造出第57张牌，总共有57个卡通，仍然满足特性。</p>
+<p>从图像的样子看，也很有规律，验证也是正确的。</p>
+<img src="/2024/crazy-matching想到的数学原理/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"  alt="图片" style="zoom:50%;" />
+
+<p>以上的方法是用表格模拟出来的，还不足以证明数学原理。但是对于工程实现来说够用了。</p>
+<p>如果重新做一副牌，只需要按照上面的表格做57个卡通图案，然后按照列的方式印刷到牌面上，就有一副「自研」的牌了。</p>
+<p>当然复刻一副牌，还有更简单的办法，直接买一副印好的牌，把别人的卡通和自己的开通做个映射表，一比一复刻比我上面的折腾要更简单。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://yunpengzhang.github.io">owenzhang</a>
+            <p>原文链接：<a href="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/</a>
+            <p>发表日期：<a href="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">June 4th 2024, 7:40:18 am</a>
+            <p>更新日期：<a href="https://yunpengzhang.github.io/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">July 22nd 2024, 10:06:36 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2024/%E8%84%91%E6%B4%9E%E5%A4%A7%E5%BC%80%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8AWhat-if%EF%BC%9F%E9%82%A3%E4%BA%9B%E5%8F%A4%E6%80%AA%E5%8F%88%E8%AE%A9%E4%BA%BA%E5%BF%A7%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%8B/" title="脑洞大开——读《What if？那些古怪又让人忧心的问题》">
+                    <div class="nextTitle">脑洞大开——读《What if？那些古怪又让人忧心的问题》</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/" title="认识思考的本质——《思考，快与慢》">
+                    <div class="prevTitle">认识思考的本质——《思考，快与慢》</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <span class="iconfont-archer wechat" title="wechat">
+                    <img class="profile-qr" src="/assets/qr.jpeg" />
+                </span>
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 150
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2024/%E8%B7%A8%E6%96%87%E5%8C%96%E6%B2%9F%E9%80%9A%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/">跨文化沟通课程笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span>
+            <a class="archive-post-title" href="/2024/%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B/">向着目标冲击——读《曼巴精神：科比自传》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2024/%E8%84%91%E6%B4%9E%E5%A4%A7%E5%BC%80%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8AWhat-if%EF%BC%9F%E9%82%A3%E4%BA%9B%E5%8F%A4%E6%80%AA%E5%8F%88%E8%AE%A9%E4%BA%BA%E5%BF%A7%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%8B/">脑洞大开——读《What if？那些古怪又让人忧心的问题》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2024/crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">crazy matching想到的数学原理</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2020/%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/28</span>
+            <a class="archive-post-title" href="/2019/%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2019/%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2019/%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span>
+            <a class="archive-post-title" href="/2019/%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">随机数在互联网业务中的应用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2019/%E7%A8%8B%E5%BA%8F%E5%91%98%EF%BC%8C%E9%80%89%E6%8B%A9%E5%92%8C%E5%8A%AA%E5%8A%9B%E5%93%AA%E4%B8%AA%E9%87%8D%E8%A6%81%EF%BC%9F/">程序员，选择和努力哪个重要？</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2019/%E5%A6%82%E4%BD%95%E5%BD%93%E5%A5%BD%E9%9D%A2%E8%AF%95%E5%AE%98/">如何当好面试官</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2019/%E5%A6%82%E4%BD%95%E5%BD%93%E5%A5%BD%E9%9D%A2%E8%AF%95%E8%80%85/">如何当好面试者</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC133%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第133场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC134%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第134场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC135%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第135场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC136%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第136场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC137%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第137场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC138%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第138场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC139%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第139场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC140%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第140场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC157%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第157场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC158%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第158场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019/Leetcode%20%E7%AC%AC159%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第159场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span>
+            <a class="archive-post-title" href="/2019/%E4%B8%80%E4%BA%9B%E5%BE%AE%E4%BF%A1%E5%8A%9F%E8%83%BD%E7%9A%84%E8%A7%82%E5%AF%9F%E4%B8%8E%E6%83%B3%E6%B3%95/">一些微信功能的观察与想法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/12</span>
+            <a class="archive-post-title" href="/2019/%E4%BA%BA%E4%BA%BA%E9%83%BD%E8%A6%81effective/">人人都要effective</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2019/%E5%85%B3%E4%BA%8E%E4%BC%81%E4%B8%9A%E7%9A%84%E6%80%9D%E8%80%83/">关于企业的思考</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2019/%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E5%9B%A2%E9%98%9F%E7%AF%87/">如何高效工作——团队篇</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2019/%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E7%A1%AC%E4%BB%B6%E7%AF%87/">如何高效工作——个人硬件篇</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2019/%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E8%BD%AF%E4%BB%B6%E7%AF%87/">如何高效工作——个人软件篇</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2019/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E5%9C%B0%E8%AE%B0%E6%97%A5%E5%BF%97/">程序员如何科学地记日志</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2019/%E6%89%BE%E5%88%B0bug%E7%9A%84%E6%A0%B9%E6%BA%90%EF%BC%8C%E9%97%AE%E4%BA%94%E6%AC%A1%E4%B8%BA%E4%BB%80%E4%B9%88/">找到bug的根源，问五次为什么</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2019/%E7%99%BE%E5%88%86%E4%B9%8B%E4%B9%9D%E5%8D%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E9%83%BD%E7%8A%AF%E8%BF%87%E7%9A%84%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF/">90%的程序员都犯过的代码错误</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span>
+            <a class="archive-post-title" href="/2019/%E5%86%B3%E7%AD%96%E7%9A%84%E8%A6%81%E7%B4%A0/">决策的要素</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span>
+            <a class="archive-post-title" href="/2018/%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E8%A6%81%E4%BA%8B%E4%BC%98%E5%85%88/">如何做到要事优先</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E6%8F%8F%E8%BF%B0%E6%B8%85%E6%A5%9A%E7%BA%BF%E4%B8%8Abug/">程序员如何描述清楚线上bug</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018/%E5%A6%82%E4%BD%95%E5%81%9A%E7%B3%BB%E7%BB%9F%E8%BF%81%E7%A7%BB%E4%B8%8B%E7%BA%BF%E7%B1%BB%E7%9A%84%E9%9C%80%E6%B1%82/">如何做系统迁移下线类的需求</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018/%E5%A6%82%E4%BD%95%E5%81%9A%E7%BB%84%E4%BB%B6%E5%8D%87%E7%BA%A7%E7%B1%BB%E7%9A%84%E9%9C%80%E6%B1%82/">如何做组件升级类的需求</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018/%E6%97%A0%E8%BE%B9%E6%97%A0%E7%95%8C/">无边无界</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E8%AE%B2%E6%B8%85%E6%A5%9A%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88/">程序员如何讲清楚技术方案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018/%E5%A6%82%E4%BD%95%E5%87%BA%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95%E9%A2%98%EF%BC%88%E6%9C%AA%E5%AE%8C%EF%BC%89/">如何出面试笔试题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E4%BA%A4%E4%BB%A3%E6%B8%85%E6%A5%9A%E4%BA%8B%E6%83%85%EF%BC%88%E6%9C%AA%E5%AE%8C%EF%BC%89/">程序员如何交代清楚事情</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018/%E7%AC%AC%E5%9B%9B%E7%AB%A0%E2%80%94%E2%80%94%E3%80%8A%E7%AE%A1%E7%90%86%E8%80%85%E5%A6%82%E4%BD%95%E5%8F%91%E6%8C%A5%E4%BA%BA%E7%9A%84%E9%95%BF%E5%A4%84%E3%80%8B/">第四章——《管理者如何发挥人的长处》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2018/%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E5%A5%BD%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">程序员如何处理好时区问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span>
+            <a class="archive-post-title" href="/2018/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E3%80%8C%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92%E5%8D%8F%E8%AE%AE%E3%80%8D/">如何设计「前后端交互协议」</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span>
+            <a class="archive-post-title" href="/2018/%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/">代码中的一致性问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2018/%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E5%A5%A5%E5%8D%A1%E5%A7%86%E5%89%83%E5%88%80%E5%8E%9F%E7%90%86/">代码中的奥卡姆剃刀原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018/%E5%9F%B9%E5%85%BB%E5%AD%A6%E4%B9%A0%E8%83%BD%E5%8A%9B%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5/">培养学习能力的三个阶段</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E6%8A%BD%E5%A5%96%E6%B4%BB%E5%8A%A8/">如何设计抽奖活动</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2018/%E6%AF%95%E4%B8%9A%E7%94%9F%E5%A6%82%E4%BD%95%E5%87%86%E5%A4%87%E6%8A%80%E6%9C%AF%E7%B1%BB%E9%9D%A2%E8%AF%95/">毕业生如何准备技术类面试</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2018/%E6%88%91%E8%83%BD%E8%B4%A1%E7%8C%AE%E4%BB%80%E4%B9%88-%E3%80%8A%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85%E3%80%8B%E7%AC%AC3%E7%AB%A0/">我能贡献什么-《卓有成效的管理者》第3章</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span>
+            <a class="archive-post-title" href="/2018/%E3%80%8A%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85%E3%80%8B1-2%E7%AB%A0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《卓有成效的管理者》1-2章读书笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2018/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E8%B7%91%E2%80%94%E2%80%94%E3%80%8A%E7%88%B1%E4%B8%8A%E8%B7%91%E6%AD%A5%E7%9A%84%E5%8D%81%E4%B8%89%E5%91%A8%E3%80%8B/">从零开始跑——《爱上跑步的十三周》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span>
+            <a class="archive-post-title" href="/2018/%E4%BD%A0%E7%9A%84%E8%83%BD%E5%8A%9B%E8%B6%85%E4%B9%8E%E4%BD%A0%E6%83%B3%E8%B1%A1/">你的能力超乎你想象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2018/%E7%B4%A0%E9%A3%9F%E8%B7%91%E6%AD%A5%E4%BF%AE%E8%A1%8C/">素食跑步修行</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span>
+            <a class="archive-post-title" href="/2018/%E5%8D%81%E5%88%86%E9%92%9F%E4%BA%86%E8%A7%A3ZAB%EF%BC%88Zookeeper%20Atomic%20Broadcast%EF%BC%89%E5%8D%8F%E8%AE%AE/">十分钟了解ZAB（Zookeeper Atomic Broadcast）协议</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2018/zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/">zookeeper典型应用场景解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2018/%E4%B8%80%E7%A7%8D%E5%BF%AB%E9%80%9F%E7%AE%80%E6%B4%81%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/">一种快速简洁的一致性哈希算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2018/%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAzookeeper%E4%B9%8B%E4%B8%80%EF%BC%9A%E5%8A%9F%E8%83%BD%E5%8F%8A%E6%9C%AC%E8%B4%A8/">深入浅出zookeeper之一：功能及本质</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span>
+            <a class="archive-post-title" href="/2018/%E6%95%99%E4%BA%BA%E6%80%8E%E6%A0%B7%E8%AF%BB%E4%B9%A6%E7%9A%84%E4%B9%A6%E2%80%94%E2%80%94%E3%80%8A%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E4%B8%80%E6%9C%AC%E4%B9%A6%E3%80%8B/">教人怎样读书的书——《如何阅读一本书》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2018/%E4%BA%86%E8%A7%A3%E4%B8%80%E8%87%B4%E6%80%A7hash%E7%AE%97%E6%B3%95/">了解一致性hash算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span>
+            <a class="archive-post-title" href="/2018/%E4%B8%89%E9%97%A8%E9%97%AE%E9%A2%98/">三门问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2018/%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%A1%88%E4%BE%8B/">问题的分析与解决案例</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span>
+            <a class="archive-post-title" href="/2018/%E8%BF%90%E8%90%A5%E4%BA%8B%E6%95%85%E7%9A%84%E5%A4%84%E7%90%86%E5%8F%8A%E9%A2%84%E9%98%B2/">运营事故的处理及预防</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/29</span>
+            <a class="archive-post-title" href="/2018/%E4%BA%92%E8%81%94%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%BA%BF%E4%B8%8A%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E7%9A%84%E5%8E%9F%E5%88%99%E5%92%8C%E6%96%B9%E6%B3%95/">互联网服务线上数据迁移的原则和方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span>
+            <a class="archive-post-title" href="/2018/%E5%85%B3%E4%BA%8E%E6%8E%92%E6%9C%9F%E7%9A%84%E6%80%9D%E8%80%83/">关于排期的思考</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2018/%E6%94%B9%E5%8F%98%E5%AF%B9%E6%80%9D%E8%80%83%E7%9A%84%E6%83%B3%E6%B3%95%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E5%BF%AB%E6%80%9D%E6%85%A2%E6%83%B3%E3%80%8B/">改变对思考的想法——读《快思慢想》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span>
+            <a class="archive-post-title" href="/2018/XSS%E4%B8%93%E9%A2%98/">XSS专题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2018/%E4%B8%A4%E4%B8%AA%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E6%A1%88%E4%BE%8B/">两个解决并发问题的案例</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2018/%E7%90%86%E8%A7%A3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E5%92%8C%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/">理解依赖注入和控制反转</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2018/php%E5%B0%8F%E7%BB%86%E8%8A%82%E4%B9%8Bswitch%E4%B8%AD%E7%9A%84continue/">php小细节之switch中的continue</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span>
+            <a class="archive-post-title" href="/2017/%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E5%9C%A8%E7%BA%BF%E6%97%B6%E9%95%BF/">如何计算在线时长</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2017/%E8%AF%B4%E8%AF%B4%E6%88%91%E4%BB%AC%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%AD%A6%E5%99%A8/">说说我们的负载均衡武器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2017/CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">CORS（跨站资源共享）介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/25</span>
+            <a class="archive-post-title" href="/2017/jump%20Consistent%20hash%E4%BB%8B%E7%BB%8D/">jump Consistent hash介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2017/%5B%E9%80%9F%E6%88%90%5D%E4%BA%86%E8%A7%A3%E4%B8%80%E8%87%B4%E6%80%A7hash%E7%AE%97%E6%B3%95/">快速了解一致性hash算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2017/%E3%80%90%E6%80%9D%E8%80%83%E3%80%91%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%88%87%E5%88%86%E7%8E%AF%E7%9A%84%E9%97%AE%E9%A2%98/">【思考】一致性hash切分环的问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2017/%E8%81%8A%E8%81%8A%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80%E5%8C%BA%E9%97%B4/">聊聊左闭右开区间</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017/%E5%A6%82%E4%BD%95%E7%9C%8B%E5%BE%85%E4%BC%98%E5%8C%96/">如何看待优化</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2016 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span>
+            <a class="archive-post-title" href="/2016/%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E8%BF%90%E8%90%A5%E4%BA%8B%E6%95%85/">如何处理运营事故</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span>
+            <a class="archive-post-title" href="/2016/%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">创业公司如何选择编程语言</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2016/python%E5%8F%82%E6%95%B0/">python参数</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2014 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2013/2014-01-31-i_think_not_all_think/">想要的总能找到</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2013 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2013/2013-12-12-impression_of_a_sharing/">一场分享中的感悟</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span>
+            <a class="archive-post-title" href="/2013/2013-12-11-taste_some_apps/">几款app的体验报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2013/2013-11-12-vim_plugin_vundle/">vim插件之vundle</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2013/2013-11-11-github_users_get_ripple/">github帐号获得ripple币</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span>
+            <a class="archive-post-title" href="/2019/2013-11-10-vim_config_tips/">vim的IDE配置和vim tips</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2017/2013-11-03-reading/">阅读心得</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span>
+            <a class="archive-post-title" href="/2013/2013-10-27-code_refactoring/">谈一谈代码重构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span>
+            <a class="archive-post-title" href="/2013/2013-10-22-some_ideas/">一些想法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2013/2013-07-19-text-file-busy/">Text file busy</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span>
+            <a class="archive-post-title" href="/2013/2013-07-09-people-like-random/">人们喜欢随机</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2013/2013-06-26-on-the-useful/">论“有用”</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2013/2013-06-26-gcc-fno-strict-aliasing-options-note/">gcc -fno-strict-aliasing 选项注意</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2013/2013-06-18-tcp-and-udp/">tcp和udp</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/14</span>
+            <a class="archive-post-title" href="/2013/2013-06-14-two-kinds-of-methods-to-modify-the-host-name/">两种修改主机名方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2013/2013-06-04-traces-of-life-have/">生命要有痕迹</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/29</span>
+            <a class="archive-post-title" href="/2013/2013-05-29-glibc-random-function/">glibc随机函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span>
+            <a class="archive-post-title" href="/2013/2013-05-27-random-port-multiplexing-and-packet-loss-problems-and-solutions/">随机端口复用导致丢包的问题及解决方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2013/2013-01-31-snprintf/">snprintf</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2012 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span>
+            <a class="archive-post-title" href="/2012/2012-12-30-learn-drip/">学习点滴</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span>
+            <a class="archive-post-title" href="/2012/2012-12-29-resolve-memory-access-conflicts/">解决内存读写冲突</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/23</span>
+            <a class="archive-post-title" href="/2012/2012-12-23-the-art-of-unix-programming-reading-notes/">《the art of unix programming》读书笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span>
+            <a class="archive-post-title" href="/2012/2012-12-16-recent-experience/">最近经验总结</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/09</span>
+            <a class="archive-post-title" href="/2012/2012-12-09-in-depth-understanding-of-computer-systems-reading-notes-3/">深入理解计算机系统读书笔记3</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span>
+            <a class="archive-post-title" href="/2012/2012-12-02-how-to-improve-the-work-efficiency/">如何提高工作效率</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span>
+            <a class="archive-post-title" href="/2012/2012-12-02-screen-command/">screen命令使用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2012/2012-11-11-switch-too-hard-hold-point-wealth-and-desire-talk/">【转】悠着点，慢着点 ——“贫富与欲望”漫谈 </a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2012/2012-11-06-pm-summary-two/">PM总结（二）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2012/2012-10-28-in-depth-understanding-of-computer-systems-study-notes-a/">深入理解计算机系统读书笔记 1</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/25</span>
+            <a class="archive-post-title" href="/2012/2012-10-25-pm-conclusion-1/">PM总结（1）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2012/2012-10-21-about-health/">关于健康</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2012/2012-10-13-vigilance-the-function-is-defined-or-declared-before-being-called/">警惕：函数被定义或声明前被调用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2012/2012-10-13-c-language-using-inline-functions/">C语言使用inline函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2012/2012-09-23-in-depth-understanding-of-computer-systems-reading-notes-0/">《深入理解计算机系统》读书笔记0</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2012/2012-09-04-several-functions-to-read-the-file/">读取文件的几个函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span>
+            <a class="archive-post-title" href="/2012/2012-08-23-for-an-idea-the-road-is-more-open/">换一种思路，路更开阔</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span>
+            <a class="archive-post-title" href="/2012/google-protocol-buffer-learning/">Google Protocol Buffer 学习</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2012/2012-07-13-miscellaneous-programmers-want/">程序员杂想</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span>
+            <a class="archive-post-title" href="/2012/2012-07-02-time-management/">时间管理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span>
+            <a class="archive-post-title" href="/2012/2012-06-30-vim-tips-merger-of-two-of-the-tail/">vim技巧之两段的尾合并</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2012/2012-06-24-linux-memory-allocation-precautions/">linux内存分配注意事项</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span>
+            <a class="archive-post-title" href="/2012/2012-06-20-daemon-running-single-case/">守护进程单例运行</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span>
+            <a class="archive-post-title" href="/2012/2012-06-20-daemon-daemon/">daemon守护进程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012/2012-06-19-c-tips/">C++ tips</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012/2012-06-19-gcc-warning-will-be-initialized-after-when-initialized-here/">gcc warning “will be initialized after/when initialized here”</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012/2012-06-19-how-developers-with-projects/">开发人员如何带项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012/2012-06-19-switch-why-developers-will-work-for-10-years-lost-insecure/">【转】为什么开发人员工作10多年了还会迷茫？没有安全感？</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2012/2012-06-18-makefile-variables-and-assignments/">makefile变量和赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span>
+            <a class="archive-post-title" href="/2012/2012-06-13-xml-use-the-experience/">XML使用心得</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span>
+            <a class="archive-post-title" href="/2012/2012-06-01-mysql-database-to-achieve-two-master-slave-synchronization-between/">实现两个Mysql数据库之间的主从同步</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/02</span>
+            <a class="archive-post-title" href="/2012/2012-05-02-improve-efficiency-use-awk-instead-of-reading-a-file-shell/">提高效率——使用awk代替shell读文件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span>
+            <a class="archive-post-title" href="/2012/linux%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E2%80%94%E2%80%94cpu%E3%80%81memory%E3%80%81io%E3%80%81network/">Linux性能监控——CPU、Memory、IO、Network</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span>
+            <a class="archive-post-title" href="/2012/2012-02-16-makefile-tips/">makefile小技巧</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span>
+            <a class="archive-post-title" href="/2012/2012-02-16-remove-svn-directories/">删除svn目录</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span>
+            <a class="archive-post-title" href="/2012/monitor%E4%B8%8A%E6%8A%A5%E6%8A%80%E5%B7%A7%E5%B0%8F%E7%BB%93/">monitor上报技巧小结</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2011 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2011/2011-12-04-how-to-survive-between-pm-and-de/">如何在pm和de之间生存</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span>
+            <a class="archive-post-title" href="/2011/2011-11-20-how-to-improve-the-efficiency-of-meetings/">如何提高会议效率</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2011/2011-11-07-what-programmers-need/">程序员需要什么</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2011/2011-11-06-give-me-a-song-of-the-time/">给我一首歌的时间</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2011/2011-10-26-internet-design-ideas-miscellany/">互联网设计想法杂记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span>
+            <a class="archive-post-title" href="/2011/2011-10-18-e7ad89e5be85/">等待</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span>
+            <a class="archive-post-title" href="/2011/2011-10-18-snowball/">滚雪球 </a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2011/2011-10-12-wave-the-summit-book/">《浪潮之巅》读后感</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011/2011-10-10-a-small-program-like/">一段喜欢的小程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011/2011-10-10-dark-time-reading-notes-four/">《暗时间》读书笔记（四）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011/2011-10-10-dark-time-reading-notes-a/">《暗时间》读书笔记（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011/2011-10-10-dark-time-reading-notes-three/">《暗时间》读书笔记（三）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011/2011-10-10-dark-time-reading-notes-two/">《暗时间》读书笔记（二）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011/2011-10-10-find-command-summary/">find命令总结</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="技术">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技术
+        </span>
+        <span class="sidebar-category-name" data-categories="读书">
+            <span class="iconfont-archer">&#xe60a;</span>
+            读书
+        </span>
+        <span class="sidebar-category-name" data-categories="思考">
+            <span class="iconfont-archer">&#xe60a;</span>
+            思考
+        </span>
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
+        </span>
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+        <span class="sidebar-category-name" data-categories="跑步">
+            <span class="iconfont-archer">&#xe60a;</span>
+            跑步
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yunpengzhang.github.io",
+        root: siteMetaRoot,
+        author: "owenzhang"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>
