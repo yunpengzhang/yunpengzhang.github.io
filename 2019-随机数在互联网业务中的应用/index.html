@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="owenzhang">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="owenzhang">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog,后台,架构,互联网">
+    <meta name="description" content="">
+    <meta name="description" content="随机数在互联网业务中的应用在互联网业务中，随机数被用到的场景很广泛。通常大家也认为使用随机数很简单，直接调用现成的函数库即可实现功能。但是想用好随机数还是有些难度的。需要熟悉其中的原理。本文会介绍一些在互联网业务中使用随机的方法。 在信息学中，随机的定义如下：  随机性：不存在统计学偏差，是完全杂乱的数列 不可预测性：不能从过去的数列推测出下一个出现的数 不可重现性：除非将数列本身保存下来，否则不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="随机数在互联网业务中的应用">
+<meta property="og:url" content="https://yunpengzhang.github.io/2019-%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:site_name" content="owenzhang的博客">
+<meta property="og:description" content="随机数在互联网业务中的应用在互联网业务中，随机数被用到的场景很广泛。通常大家也认为使用随机数很简单，直接调用现成的函数库即可实现功能。但是想用好随机数还是有些难度的。需要熟悉其中的原理。本文会介绍一些在互联网业务中使用随机的方法。 在信息学中，随机的定义如下：  随机性：不存在统计学偏差，是完全杂乱的数列 不可预测性：不能从过去的数列推测出下一个出现的数 不可重现性：除非将数列本身保存下来，否则不">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-09-27T10:00:03.000Z">
+<meta property="article:modified_time" content="2019-09-27T10:00:03.000Z">
+<meta property="article:author" content="owenzhang">
+<meta property="article:tag" content="后端,架构,读书,运动,写作">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favorite.ico">
+    <title>随机数在互联网业务中的应用 · owenzhang的博客</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+        <script>
+            var _hmt = _hmt || [];
+            (function () {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?84af242fe29877e06dc0eb4517cf7991";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="owenzhang的博客" type="application/atom+xml">
+</head>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">owenzhang的博客</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">owenzhang的博客</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">随机数在互联网业务中的应用</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                随机数在互联网业务中的应用
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">5k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2019/09/27</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="随机数在互联网业务中的应用"><a href="#随机数在互联网业务中的应用" class="headerlink" title="随机数在互联网业务中的应用"></a>随机数在互联网业务中的应用</h1><p>在互联网业务中，随机数被用到的场景很广泛。通常大家也认为使用随机数很简单，直接调用现成的函数库即可实现功能。但是想用好随机数还是有些难度的。需要熟悉其中的原理。本文会介绍一些在互联网业务中使用随机的方法。</p>
+<p>在信息学中，随机的定义如下：</p>
+<blockquote>
+<p>随机性：不存在统计学偏差，是完全杂乱的数列</p>
+<p>不可预测性：不能从过去的数列推测出下一个出现的数</p>
+<p>不可重现性：除非将数列本身保存下来，否则不能重现相同的数列</p>
+</blockquote>
+<p>随机数可能在统计上呈现某种规律。</p>
+<p>在工程上，用到随机也主要是用到两个特性：</p>
+<ol>
+<li>不可预测性</li>
+<li>均匀获取数字。（在大量随机统计时，每个数出现次数的期望相同）</li>
+</ol>
+<p>在安全相关的场景，用到的是不可预测性。例如生成密钥，生成验证码等场景，让黑客不能从中找到生成的规律。</p>
+<p>在抽奖实现、负载均衡等场景，主要用到随机数在统计时，每个随机数字出现的次数的期望都很接近，让结果是公平的。</p>
+<h2 id="0-随机数的生成方法"><a href="#0-随机数的生成方法" class="headerlink" title="0 随机数的生成方法"></a>0 随机数的生成方法</h2><p>在计算机中，主要生成随机数有两种方法，线性同余算法，硬件设备随机数生成器。</p>
+<h3 id="一、线性同余算法"><a href="#一、线性同余算法" class="headerlink" title="一、线性同余算法"></a>一、线性同余算法</h3><p>在C函数库中的<code>rand()</code>函数，用的就是线性同余算法，类似的实现代码如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">unsigned</span> <span class="type">long</span> next = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* RAND_MAX assumed to be 32767 */</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">myrand</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    next = next * <span class="number">1103515245</span> + <span class="number">12345</span>;</span><br><span class="line">    <span class="keyword">return</span>((<span class="type">unsigned</span>)(next/<span class="number">65536</span>) % <span class="number">32768</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">mysrand</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> seed)</span> &#123;</span><br><span class="line">    next = seed;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>注：以上只是为了简单描述Glibc库实现的方法，实际代码不是这样写的。</code></p>
+<p>利用<code>srand</code>函数设置初始随机种子，在每次需要随机数的时候调用<code>rand</code>生成随机数。</p>
+<p>线性同余算法的特点是：只要种子相同，即使在两台不同的机器上，都能够产生相同的随机序列。利用这个特性，我们可以在应用层做很多事。</p>
+<p>例如：</p>
+<p>时间换空间：只要保存一个种子，就能够通过计算得到一个序列。可以利用这个序列来实现功能。</p>
+<p>还原操作：在客户端根据随机序列构建地图，然后在服务器校验，只需要同步种子，就能实现相同场景。</p>
+<p>线性同余算法计算速度快，实现简单，但是是<strong>伪随机</strong>，知道种子后能够预测随机序列，而且随机序列经过一段时间后会循环重复。</p>
+<p>所以在安全使用的场景中，不会使用线性同余算法。</p>
+<h3 id="二、Linux系统的-dev-random"><a href="#二、Linux系统的-dev-random" class="headerlink" title="二、Linux系统的&#x2F;dev&#x2F;random"></a>二、Linux系统的&#x2F;dev&#x2F;random</h3><p>&#x2F;dev&#x2F;random在类UNIX系统中是一个特殊的设备文件，可以用作随机数发生器或伪随机数发生器。Linux内核允许程序访问来自设备驱动程序或其它来源的背景噪声。</p>
+<p>发生器有一个容纳噪声数据的熵池，在读取时，&#x2F;dev&#x2F;random设备会返回小于熵池噪声总数的随机字节。&#x2F;dev&#x2F;random可生成高随机性的公钥或一次性密码本。</p>
+<p>若熵池空了，对&#x2F;dev&#x2F;random的读操作将会被阻塞，直到收集到了足够的环境噪声为止。这样的设计使得&#x2F;dev&#x2F;random是真正的随机数发生器，提供了最大可能的随机数据熵，建议在需要生成高强度的密钥时使用。</p>
+<p>为了解决阻塞的问题，还提供了一个设备&#x2F;dev&#x2F;urandom，即非阻塞版本。它会重复使用熵池中的数据以产生伪随机数据，输出的熵可能小于&#x2F;dev&#x2F;random的。它可以作为生成较低强度密码的伪随机数生成器。</p>
+<p><strong>安全使用随机数是比较专业的场景，一般都是使用特定的库或算法，直接调用即可，不要自己造算法。</strong></p>
+<h2 id="1-误用随机的场景"><a href="#1-误用随机的场景" class="headerlink" title="1. 误用随机的场景"></a>1. 误用随机的场景</h2><p>在日常的开发场景中，遇到过几种误用随机的场景，相信很多人还会掉到这些坑里。这里提出来供大家参考。</p>
+<h3 id="1-1-多次设置随机种子"><a href="#1-1-多次设置随机种子" class="headerlink" title="1.1 多次设置随机种子"></a>1.1 多次设置随机种子</h3><p>线性同余算法，为了让每次程序启动时生成的随机数都是不同的，可以利用<code>srand()</code>函数设置不同的随机种子。一般是设置种子为当前时间，或者进程的进程号等。然后再调用<code>rand()</code>来生成随机数。**<code>srand()</code>只需要开始调用一次，<code>rand()</code>是每次需要随机数的时候调用一次。**</p>
+<p>但是有的错误用法，会在常驻进程中使用随机数的时候，把<code>srand</code>和<code>rand</code>配套调用。起不到随机的效果，每一秒钟的随机数都是一样的，而且只取到的线性同余生成的第一个随机数，整体的均匀性也达不到。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">srand(time(<span class="literal">NULL</span>));<span class="comment">//正确使用的方式</span></span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//srand(time(NULL));//错误使用的方式,同一秒生成的r值都相同。</span></span><br><span class="line">    <span class="type">int</span> r = rand();</span><br><span class="line">    <span class="comment">//使用随机数的逻辑</span></span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">    <span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果使用上面错误的方式，在一个常驻进程中，会让每秒钟生成的随机数都相同。假如这个随机数是用来给后端选择路由的，会造成同一秒钟的流量都访问到同一个节点，起不到负载均衡的作用。在大型互联网服务中，一秒钟的流量也是巨大的，可能会影响单一节点的服务质量。</p>
+<h3 id="1-2-生成范围随机数直接取模"><a href="#1-2-生成范围随机数直接取模" class="headerlink" title="1.2 生成范围随机数直接取模"></a>1.2 生成范围随机数直接取模</h3><p>假设一个随机函数rand21()，每次生成的随机数范围是[0, 21)，那么现在要生成[0, 10)的随机数，如何生成。</p>
+<p>常见的错误实现方式是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int rand10 = rand21() % 10;</span><br></pre></td></tr></table></figure>
+
+<p>虽然这种方式得到的数字结果是在[0, 10)之间的。但这种实现方式是错的，因为生成的[0,10)区间的数字不均匀。生成0这两个数字的概率要超过其他9个数字的概率。</p>
+<p>rand21产生的[0, 10), [10, 20)取模对应[0,10)是等概率的，会多出来[20, 21)这个区间。直接取模会让结果不均匀。</p>
+<p>正确的做法应该是截断这段数值。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">int r = 0;</span><br><span class="line">int rand10 = 0;</span><br><span class="line">while(true)</span><br><span class="line">&#123;</span><br><span class="line">    r = rand21();</span><br><span class="line">    if(r&gt;=20)</span><br><span class="line">        continue;</span><br><span class="line">    else</span><br><span class="line">        rand10 = r % 10;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码理论上会产生死循环，可能一直生成20这个随机数。在实际工程中可以做个上报，发现超过一定的数值次数，就主动跳出循环，返回失败或设置个默认值。但实际这种概率非常小。</p>
+<p><strong>从一种随机数范围的发生器，映射到另一个随机数范围的发生器过程中，不要简单的取模，可能会造成结果不是随机的。</strong></p>
+<blockquote>
+<p>注：除了截断操作，还有拼接的方法，拼出要随机新范围的倍数，再取模。本质和截断一样。</p>
+</blockquote>
+<h3 id="1-3-一定要用随机吗"><a href="#1-3-一定要用随机吗" class="headerlink" title="1.3 一定要用随机吗"></a>1.3 一定要用随机吗</h3><p>有时，我们用随机的场景，不是真的为了随机，而是为了让结果更分散。这种场景用随机是一种实现方式。需要了解业务的目的，挑选出适合的实现方式，让方案更简单。</p>
+<p>例如路由选择，只要保证节点分布是均匀的，是否可预测并不是必要条件。只要整体的统计分布是均匀即可。存储一个计数器，简单的轮询也是实现均匀分发。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//随机实现路由</span></span><br><span class="line"><span class="comment">//getRouteNodeId返回后端要路由到的Node节点的id，id的范围是[0, nodeCount)</span></span><br><span class="line"><span class="comment">//nodeCount后端节点的总数量</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getRouteNodeId</span><span class="params">(<span class="type">int</span> nodeCount)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> rand()%nodeCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//轮询实现</span></span><br><span class="line"><span class="comment">//getRouteNodeId返回后端要路由到的Node节点的id，id的范围是[0, nodeCount)</span></span><br><span class="line"><span class="comment">//nodeCount后端节点的总数量</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">getRouteNodeId</span><span class="params">(<span class="type">int</span> nodeCount)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">static</span> <span class="type">int</span> nextNodeId = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> (nextNodeId++)%nodeCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是有些场景，用随机反而麻烦。</p>
+<p>例如每100万号码存储在一个服务中，对前1000万个号码进行发送push消息操作。如果直接按顺序遍历这1000万个号码，会对这10个存储服务分别造成查询压力。导致修改操作冷热不均。一种方式是每次从号码区间中随机选择一个号码处理，但是要记录号码是否被选择过的状态，需要额外的存储空间。</p>
+<p>还一种简单的方法是先按照号段轮询，再按照号码轮询，可以达到不需要存储的实现方式。</p>
+<p>伪代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; ++i)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> group = <span class="number">0</span>; group &lt; <span class="number">10</span>; ++group)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="type">int</span> uid = group * <span class="number">10000</span> + i;</span><br><span class="line">		<span class="comment">//下发消息逻辑</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本质是用到的是映射，让结果均匀，虽然随机也能达到这个目的。</p>
+<h2 id="2-项目中用到的随机场景"><a href="#2-项目中用到的随机场景" class="headerlink" title="2. 项目中用到的随机场景"></a>2. 项目中用到的随机场景</h2><p>在项目中，用好随机可以帮我们提高用户体验，还可以帮我们用时间换空间。</p>
+<h3 id="2-1-让用户体验更好的随机"><a href="#2-1-让用户体验更好的随机" class="headerlink" title="2.1 让用户体验更好的随机"></a>2.1 让用户体验更好的随机</h3><p>有时虽然程序员懂随机，但是和用户理解的随机不一样，这时程序员要适应用户的感观。</p>
+<h4 id="2-1-1-歌曲随机播放"><a href="#2-1-1-歌曲随机播放" class="headerlink" title="2.1.1 歌曲随机播放"></a>2.1.1 歌曲随机播放</h4><p>在播放器中，随机播放是一种播放模式。如果简单的调用随机函数，会出现用户接受不了的情况。可能下一首播放的歌曲和当前歌曲是一样的，可能某个子序列会反复播放。</p>
+<p>例如有ABCD四首歌。可能会出现AABB、ABABABAB这样的顺序播放。虽然在数学上是达到了随机，但是用户体验不佳。</p>
+<p>播放器的「随机播放」实际上是一种打乱播放的意思，可以用的shuffle洗牌算法（可以使用<code>Fisher–Yates shuffle</code>算法）。把原本有序的序列，变成无需无规则的序列，就像洗扑克牌一样。</p>
+<p>以下为<code>Fisher–Yates shuffle</code>算法的伪代码，也用到了随机函数。</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-- To shuffle an array a of n elements (indices <span class="number">0.</span>.n-<span class="number">1</span>):</span><br><span class="line">for i from n−<span class="number">1</span> downto <span class="number">1</span> <span class="keyword">do</span></span><br><span class="line">     j ← random <span class="keyword">integer</span> such that <span class="number">0</span> ≤ j ≤ i</span><br><span class="line">     exchange a[j] and a[i]-- To shuffle an array a of n elements (indices <span class="number">0.</span>.n-<span class="number">1</span>):</span><br><span class="line">for i from n−<span class="number">1</span> downto <span class="number">1</span> <span class="keyword">do</span></span><br><span class="line">     j ← random <span class="keyword">integer</span> such that <span class="number">0</span> ≤ j ≤ i</span><br><span class="line">     exchange a[j] and a[i]</span><br></pre></td></tr></table></figure>
+
+
+
+<p>有时还需要考虑专辑、歌手、曲风等因素，可以多一些区分的维度，在每个维度再加上一些随机。可能有些歌曲用户比较爱听，随机到的权重也要高一点。</p>
+<p>总之，歌曲的随机播放要根据用户对播放器的预期，来干涉生成序列，不能简单粗暴地直接使用随机来生成。</p>
+<h4 id="2-1-2-游戏抽奖"><a href="#2-1-2-游戏抽奖" class="headerlink" title="2.1.2 游戏抽奖"></a>2.1.2 游戏抽奖</h4><p><strong>十连抽</strong></p>
+<p>在游戏中，为了激励玩家批量购买，会有「10连抽必中稀有物品」的玩法。用户如果一次性消耗10次中奖机会，就会至少中一次稀有物品。</p>
+<p>由于已经承诺给用户必中，所以要干预连续10次抽中的情况，如果出现10次都没中大奖，就会给用户替换一个稀有物品。</p>
+<p>对于10连抽的场景，要人工干预最后的奖励序列。不能一味的随机。</p>
+<p><strong>普通抽奖</strong></p>
+<p>在一些国家或地区，会要求软件开发者给出中奖概率。当玩家知道中奖概率后，针对玩家的抽奖就不能完全用随机函数，小于概率值就中，不小于就不中的方法。因为这种方法会让玩家体验不好，以为官方在作弊。</p>
+<p>例如：一个装备，抽奖中奖的概率是10%。以普通玩家的想法，抽10次就会中一次，如果抽20次才中一次，玩家也勉强接受。但是如果抽100次，一次都不中，大多数玩家都接受不了的，一方面会质疑游戏的公平性，也会因为体验不好而离开。另外一边与运气不好的玩家相反，还有些运气好的玩家，可能抽10次，就中了5次，消耗了过多的奖品。</p>
+<p>在一些大DAU的游戏中，运气好的玩家和运气不好的玩家，出现的概率还挺高的。</p>
+<p>运气不好的玩家。每次抽中奖概率10%，抽100次都不中的概率是$(1-10%)^{100}&#x3D;2.656*10^{-5}$大概万分之二。如果一天有1万个玩家抽了100次奖，平均有2个人是100次都不中。</p>
+<p>运气好的玩家。10%中奖，抽10次中5次的概率是$C(10, 5) * 10%^5*90%^5 &#x3D; ‭0.0014880348‬$，大概是万分之15左右，是运气不好的玩家概率的7、8倍。</p>
+<p>为了让玩家感观上是随机并且公平，也采用洗牌算法，对每个玩家生成一个奖品等级的中奖序列。把序列打乱，按次序给玩家，每次根据奖品等级生成该等级的奖品发给玩家。</p>
+<h4 id="2-1-3-游戏武器暴击"><a href="#2-1-3-游戏武器暴击" class="headerlink" title="2.1.3 游戏武器暴击"></a>2.1.3 游戏武器暴击</h4><p>在游戏中的武器装备也涉及到概率，例如一把屠龙刀，暴击概率提升到30%。玩家的感觉也是在10刀里，大概率会有3刀是暴击的，在100刀里要有30几刀的暴击。</p>
+<p>暴击和抽奖遇到的问题类似，都是玩家对概率的理解和程序员理解不一致。因为按照独立事件的概率，可以连续100次都不暴击，也可以连续3-4刀每次都暴击。连续不暴击会伤害持有武器玩家的体验，连续暴击会伤害和持有武器对战玩家的体验。</p>
+<p>暴击在游戏中的不确定性会增加游戏的乐趣性。和抽奖不同，偶尔多一两次，对于游戏来说玩家也是可以接受的，不会像抽奖如果密集中奖会影响体验。在暴击的随机，可以参考暴雪的随机公式（PRD）。</p>
+<p>$$P(N) &#x3D; C × N$$</p>
+<p>P(N) 表示在第N次攻击之后某个动作发生得概率，N表示第N次修正概率后得攻击次数（最小值为1），C表示暴击发生的初始概率以及每次攻击之后概率的增量，是个简单地线性关系。当N足够多的时候，P（N）总会趋向于1。</p>
+<p>在编写程序时，先设置好C，通过C来增加下一次效果触发的几率。C会作为初始概率，比效果说明中的概率要低。当效果没有触发时，会不停地积累N，让P(N)逐渐增加接近100%。一旦效果触发了效果，计数器N就会重置。</p>
+<p>例如一把武器有25%暴击，把初始概率C设置为8.5%。那么第一次攻击，他实际上只有大约8.5%几率触发暴击，随后每一次失败的触发会增加大约8.5%触发几率，于是到了第二次攻击，几率就变成大约17%，第三次大约25.5%，以此类推，在一次暴击触发后，下一次攻击的触发几率又会重置到大约8.5%，那么经过一段时间之后，暴击几率的平均值就会接近25%。</p>
+<p>采用PRD随机公式保证在有限次数能够实现暴击，并且整体期望和独立事件的期望接近。</p>
+<h3 id="2-2-时间换空间"><a href="#2-2-时间换空间" class="headerlink" title="2.2 时间换空间"></a>2.2 时间换空间</h3><h4 id="2-2-1-游戏作弊校验"><a href="#2-2-1-游戏作弊校验" class="headerlink" title="2.2.1 游戏作弊校验"></a>2.2.1 游戏作弊校验</h4><p>在一些消除类的单机游戏中，玩家游戏在客户端本机进行，结束后上传分数给服务器。服务器会根据玩家的分数进行排行，并给予一些奖励。为了让玩家能够有良好的体验，在游戏过程中，所有操作都在本地进行。为了防止作弊，在玩家上传分数后进行检测。</p>
+<p>如何做到校验玩家游戏是否作弊呢？方法也比较简单，把游戏数据上传，在服务器重放玩家操作，根据行为判断是否作弊。但是这里有一个难点，游戏开始下发地图的时候，如果把游戏中所有的随机事件，例如机关的摆放，NPC的随机施法都生成好下发到客户端，会消耗很多流量，影响启动速度。</p>
+<p>线性同余算法，不同机器相同种子，可以产生相同序列的特性，很好地支持了这个场景。在游戏开始时，通过加密通道，把随机种子下发给客户端，客户端按照随机种子生成地图和操作。结束游戏，客户端上传用户操作，服务器收到操作序列后，重新生成地图和地图上的机关操作，然后快速执行玩家操作。最终校验两种结果是否一致。通过种子的传递，只要算法一致，就能够重放，大大降低了带宽和同步数据的复杂度。</p>
+<h4 id="2-2-2-节约存储成本"><a href="#2-2-2-节约存储成本" class="headerlink" title="2.2.2 节约存储成本"></a>2.2.2 节约存储成本</h4><p>在互联网早期的一些安全充值的场景中，为了验证充值卡的归属。用户充值时，需要输入充值卡背面的密保卡片中的一些数字，校验卡片归属。因为充值卡后面的密保矩阵是被覆盖的，如果刮开会影响销售，只有购买的人才能看到。一般是一个10*10的数字矩阵。</p>
+<p>最直接设计方法是，可以给每个充值卡生成一个随机的100个数字序列，然后每次针对用户的输入进行匹配。如果矩阵每个数字用两个字节存储，1张卡要耗费200个字节。如果发行了1亿张卡，就要20G的存储空间。</p>
+<p>但是如果每张卡只存一个种子值，当用户来校验时，根据种子生成100个数字来校验，效果是一样的。假设一个种子4个字节，1亿张卡只需要400M存储就可以了。可以都load到缓存中加快速度。</p>
+<p>利用随机空间换时间，本质是存储元数据，利用算法的生成规律，保证能反复重放序列。可以达到减少同步信息，降低存储量的效果。虽然现在带宽和存储的成本越来越低，但是掌握了这种方法，在一些特殊场景中能够提供奇妙的解决方案。</p>
+<h2 id="3-小结"><a href="#3-小结" class="headerlink" title="3. 小结"></a>3. 小结</h2><p>随机在互联网应用的十分广泛，我们根据场景采用不同的使用方式。</p>
+<p>在安全相关的专业算法领域，用已有的算法和工具，不要去造轮子。在Linux系统中使用&#x2F;dev&#x2F;random读取随机数。</p>
+<p>在应用层，使用伪随机函数例如线性同余算法，快速生成随机数，满足大多数生成随机数的需求。</p>
+<p>在游戏、歌曲等更高层应用的领域，用户对随机的理解和数学上的随机不太一致。要区分用户是要整体分布更均匀，还是让结果充满随机性增加乐趣。根据场景适时调整，修改随机数的分布，而不是默认采用独立事件生成随机数，往往能够达到更好的效果。</p>
+<p>算法是固定的，在实现业务的时候，要从实际角度出发，选择最适合的实现方式，来满足业务需求。做到活学活用。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://yunpengzhang.github.io">owenzhang</a>
+            <p>原文链接：<a href="https://yunpengzhang.github.io/2019-%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">https://yunpengzhang.github.io/2019-%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/</a>
+            <p>发表日期：<a href="https://yunpengzhang.github.io/2019-%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">September 27th 2019, 10:00:03 am</a>
+            <p>更新日期：<a href="https://yunpengzhang.github.io/2019-%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">September 27th 2019, 10:00:03 am</a>
+            <p>版权声明：本文采用<a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2019-%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" title="简单高效的排行榜算法——树状数组">
+                    <div class="nextTitle">简单高效的排行榜算法——树状数组</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019-%E7%A8%8B%E5%BA%8F%E5%91%98%EF%BC%8C%E9%80%89%E6%8B%A9%E5%92%8C%E5%8A%AA%E5%8A%9B%E5%93%AA%E4%B8%AA%E9%87%8D%E8%A6%81%EF%BC%9F/" title="程序员，选择和努力哪个重要？">
+                    <div class="prevTitle">程序员，选择和努力哪个重要？</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <span class="iconfont-archer wechat" title="wechat">
+                    <img class="profile-qr" src="/assets/qr.jpeg" />
+                </span>
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">随机数在互联网业务中的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#0-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%9A%84%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">0 随机数的生成方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%BA%BF%E6%80%A7%E5%90%8C%E4%BD%99%E7%AE%97%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">一、线性同余算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81Linux%E7%B3%BB%E7%BB%9F%E7%9A%84-dev-random"><span class="toc-number">1.1.2.</span> <span class="toc-text">二、Linux系统的&#x2F;dev&#x2F;random</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%AF%AF%E7%94%A8%E9%9A%8F%E6%9C%BA%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="toc-number">1.2.</span> <span class="toc-text">1. 误用随机的场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%A4%9A%E6%AC%A1%E8%AE%BE%E7%BD%AE%E9%9A%8F%E6%9C%BA%E7%A7%8D%E5%AD%90"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 多次设置随机种子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%94%9F%E6%88%90%E8%8C%83%E5%9B%B4%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%9B%B4%E6%8E%A5%E5%8F%96%E6%A8%A1"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 生成范围随机数直接取模</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E4%B8%80%E5%AE%9A%E8%A6%81%E7%94%A8%E9%9A%8F%E6%9C%BA%E5%90%97"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.3 一定要用随机吗</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%94%A8%E5%88%B0%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.</span> <span class="toc-text">2. 项目中用到的随机场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E8%AE%A9%E7%94%A8%E6%88%B7%E4%BD%93%E9%AA%8C%E6%9B%B4%E5%A5%BD%E7%9A%84%E9%9A%8F%E6%9C%BA"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 让用户体验更好的随机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1-%E6%AD%8C%E6%9B%B2%E9%9A%8F%E6%9C%BA%E6%92%AD%E6%94%BE"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">2.1.1 歌曲随机播放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-2-%E6%B8%B8%E6%88%8F%E6%8A%BD%E5%A5%96"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">2.1.2 游戏抽奖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-3-%E6%B8%B8%E6%88%8F%E6%AD%A6%E5%99%A8%E6%9A%B4%E5%87%BB"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">2.1.3 游戏武器暴击</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%97%B6%E9%97%B4%E6%8D%A2%E7%A9%BA%E9%97%B4"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 时间换空间</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-%E6%B8%B8%E6%88%8F%E4%BD%9C%E5%BC%8A%E6%A0%A1%E9%AA%8C"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">2.2.1 游戏作弊校验</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-2-%E8%8A%82%E7%BA%A6%E5%AD%98%E5%82%A8%E6%88%90%E6%9C%AC"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">2.2.2 节约存储成本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%B0%8F%E7%BB%93"><span class="toc-number">1.4.</span> <span class="toc-text">3. 小结</span></a></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 150
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2024 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/12</span>
+            <a class="archive-post-title" href="/2024-%E8%B7%A8%E6%96%87%E5%8C%96%E6%B2%9F%E9%80%9A%E8%AF%BE%E7%A8%8B%E7%AC%94%E8%AE%B0/">跨文化沟通课程笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/11</span>
+            <a class="archive-post-title" href="/2024-%E5%90%91%E7%9D%80%E7%9B%AE%E6%A0%87%E5%86%B2%E5%87%BB%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E6%9B%BC%E5%B7%B4%E7%B2%BE%E7%A5%9E%EF%BC%9A%E7%A7%91%E6%AF%94%E8%87%AA%E4%BC%A0%E3%80%8B/">向着目标冲击——读《曼巴精神：科比自传》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2024-%E8%84%91%E6%B4%9E%E5%A4%A7%E5%BC%80%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8AWhat-if%EF%BC%9F%E9%82%A3%E4%BA%9B%E5%8F%A4%E6%80%AA%E5%8F%88%E8%AE%A9%E4%BA%BA%E5%BF%A7%E5%BF%83%E7%9A%84%E9%97%AE%E9%A2%98%E3%80%8B/">脑洞大开——读《What if？那些古怪又让人忧心的问题》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2024-crazy-matching%E6%83%B3%E5%88%B0%E7%9A%84%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86/">crazy matching想到的数学原理</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2020 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/10</span>
+            <a class="archive-post-title" href="/2020-%E8%AE%A4%E8%AF%86%E6%80%9D%E8%80%83%E7%9A%84%E6%9C%AC%E8%B4%A8%E2%80%94%E2%80%94%E3%80%8A%E6%80%9D%E8%80%83%EF%BC%8C%E5%BF%AB%E4%B8%8E%E6%85%A2%E3%80%8B/">认识思考的本质——《思考，快与慢》</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2019 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/28</span>
+            <a class="archive-post-title" href="/2019-%E5%A4%9A%E9%98%B6Hash%E7%AE%97%E6%B3%95/">多阶Hash算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/27</span>
+            <a class="archive-post-title" href="/2019-%E6%A0%BC%E9%9B%B7%E7%A0%81/">格雷码</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2019-%E7%AE%80%E5%8D%95%E9%AB%98%E6%95%88%E7%9A%84%E6%8E%92%E8%A1%8C%E6%A6%9C%E7%AE%97%E6%B3%95%E2%80%94%E2%80%94%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">简单高效的排行榜算法——树状数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/28</span>
+            <a class="archive-post-title" href="/2019-%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%9C%A8%E4%BA%92%E8%81%94%E7%BD%91%E4%B8%9A%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8/">随机数在互联网业务中的应用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span>
+            <a class="archive-post-title" href="/2019-%E7%A8%8B%E5%BA%8F%E5%91%98%EF%BC%8C%E9%80%89%E6%8B%A9%E5%92%8C%E5%8A%AA%E5%8A%9B%E5%93%AA%E4%B8%AA%E9%87%8D%E8%A6%81%EF%BC%9F/">程序员，选择和努力哪个重要？</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2019-%E5%A6%82%E4%BD%95%E5%BD%93%E5%A5%BD%E9%9D%A2%E8%AF%95%E5%AE%98/">如何当好面试官</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2019-%E5%A6%82%E4%BD%95%E5%BD%93%E5%A5%BD%E9%9D%A2%E8%AF%95%E8%80%85/">如何当好面试者</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC133%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第133场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC134%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第134场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC135%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第135场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC136%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第136场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC137%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第137场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC138%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第138场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC139%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第139场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC140%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第140场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC157%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第157场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC158%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第158场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span>
+            <a class="archive-post-title" href="/2019-Leetcode-%E7%AC%AC159%E5%9C%BA%E5%91%A8%E8%B5%9B%E8%A7%A3%E9%A2%98%E6%8A%A5%E5%91%8A/">Leetcode 第159场周赛解题报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span>
+            <a class="archive-post-title" href="/2019-%E4%B8%80%E4%BA%9B%E5%BE%AE%E4%BF%A1%E5%8A%9F%E8%83%BD%E7%9A%84%E8%A7%82%E5%AF%9F%E4%B8%8E%E6%83%B3%E6%B3%95/">一些微信功能的观察与想法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/12</span>
+            <a class="archive-post-title" href="/2019-%E4%BA%BA%E4%BA%BA%E9%83%BD%E8%A6%81effective/">人人都要effective</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span>
+            <a class="archive-post-title" href="/2019-%E5%85%B3%E4%BA%8E%E4%BC%81%E4%B8%9A%E7%9A%84%E6%80%9D%E8%80%83/">关于企业的思考</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/02</span>
+            <a class="archive-post-title" href="/2019-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E5%9B%A2%E9%98%9F%E7%AF%87/">如何高效工作——团队篇</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2019-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E7%A1%AC%E4%BB%B6%E7%AF%87/">如何高效工作——个人硬件篇</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/14</span>
+            <a class="archive-post-title" href="/2019-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E2%80%94%E2%80%94%E4%B8%AA%E4%BA%BA%E8%BD%AF%E4%BB%B6%E7%AF%87/">如何高效工作——个人软件篇</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2019-%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E7%A7%91%E5%AD%A6%E5%9C%B0%E8%AE%B0%E6%97%A5%E5%BF%97/">程序员如何科学地记日志</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/26</span>
+            <a class="archive-post-title" href="/2019-%E6%89%BE%E5%88%B0bug%E7%9A%84%E6%A0%B9%E6%BA%90%EF%BC%8C%E9%97%AE%E4%BA%94%E6%AC%A1%E4%B8%BA%E4%BB%80%E4%B9%88/">找到bug的根源，问五次为什么</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span>
+            <a class="archive-post-title" href="/2019-%E7%99%BE%E5%88%86%E4%B9%8B%E4%B9%9D%E5%8D%81%E7%9A%84%E7%A8%8B%E5%BA%8F%E5%91%98%E9%83%BD%E7%8A%AF%E8%BF%87%E7%9A%84%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF/">90%的程序员都犯过的代码错误</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/09</span>
+            <a class="archive-post-title" href="/2019-%E5%86%B3%E7%AD%96%E7%9A%84%E8%A6%81%E7%B4%A0/">决策的要素</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2018 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/24</span>
+            <a class="archive-post-title" href="/2018-%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E8%A6%81%E4%BA%8B%E4%BC%98%E5%85%88/">如何做到要事优先</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018-%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E6%8F%8F%E8%BF%B0%E6%B8%85%E6%A5%9A%E7%BA%BF%E4%B8%8Abug/">程序员如何描述清楚线上bug</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018-%E5%A6%82%E4%BD%95%E5%81%9A%E7%B3%BB%E7%BB%9F%E8%BF%81%E7%A7%BB%E4%B8%8B%E7%BA%BF%E7%B1%BB%E7%9A%84%E9%9C%80%E6%B1%82/">如何做系统迁移下线类的需求</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018-%E5%A6%82%E4%BD%95%E5%81%9A%E7%BB%84%E4%BB%B6%E5%8D%87%E7%BA%A7%E7%B1%BB%E7%9A%84%E9%9C%80%E6%B1%82/">如何做组件升级类的需求</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/17</span>
+            <a class="archive-post-title" href="/2018-%E6%97%A0%E8%BE%B9%E6%97%A0%E7%95%8C/">无边无界</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018-%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E8%AE%B2%E6%B8%85%E6%A5%9A%E6%8A%80%E6%9C%AF%E6%96%B9%E6%A1%88/">程序员如何讲清楚技术方案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018-%E5%A6%82%E4%BD%95%E5%87%BA%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95%E9%A2%98%EF%BC%88%E6%9C%AA%E5%AE%8C%EF%BC%89/">如何出面试笔试题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018-%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E4%BA%A4%E4%BB%A3%E6%B8%85%E6%A5%9A%E4%BA%8B%E6%83%85%EF%BC%88%E6%9C%AA%E5%AE%8C%EF%BC%89/">程序员如何交代清楚事情</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span>
+            <a class="archive-post-title" href="/2018-%E7%AC%AC%E5%9B%9B%E7%AB%A0%E2%80%94%E2%80%94%E3%80%8A%E7%AE%A1%E7%90%86%E8%80%85%E5%A6%82%E4%BD%95%E5%8F%91%E6%8C%A5%E4%BA%BA%E7%9A%84%E9%95%BF%E5%A4%84%E3%80%8B/">第四章——《管理者如何发挥人的长处》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2018-%E7%A8%8B%E5%BA%8F%E5%91%98%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E5%A5%BD%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/">程序员如何处理好时区问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/13</span>
+            <a class="archive-post-title" href="/2018-%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E3%80%8C%E5%89%8D%E5%90%8E%E7%AB%AF%E4%BA%A4%E4%BA%92%E5%8D%8F%E8%AE%AE%E3%80%8D/">如何设计「前后端交互协议」</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span>
+            <a class="archive-post-title" href="/2018-%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98/">代码中的一致性问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2018-%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E5%A5%A5%E5%8D%A1%E5%A7%86%E5%89%83%E5%88%80%E5%8E%9F%E7%90%86/">代码中的奥卡姆剃刀原理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018-%E5%9F%B9%E5%85%BB%E5%AD%A6%E4%B9%A0%E8%83%BD%E5%8A%9B%E7%9A%84%E4%B8%89%E4%B8%AA%E9%98%B6%E6%AE%B5/">培养学习能力的三个阶段</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/05</span>
+            <a class="archive-post-title" href="/2018-%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E6%8A%BD%E5%A5%96%E6%B4%BB%E5%8A%A8/">如何设计抽奖活动</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2018-%E6%AF%95%E4%B8%9A%E7%94%9F%E5%A6%82%E4%BD%95%E5%87%86%E5%A4%87%E6%8A%80%E6%9C%AF%E7%B1%BB%E9%9D%A2%E8%AF%95/">毕业生如何准备技术类面试</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2018-%E6%88%91%E8%83%BD%E8%B4%A1%E7%8C%AE%E4%BB%80%E4%B9%88-%E3%80%8A%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85%E3%80%8B%E7%AC%AC3%E7%AB%A0/">我能贡献什么-《卓有成效的管理者》第3章</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/26</span>
+            <a class="archive-post-title" href="/2018-%E3%80%8A%E5%8D%93%E6%9C%89%E6%88%90%E6%95%88%E7%9A%84%E7%AE%A1%E7%90%86%E8%80%85%E3%80%8B1-2%E7%AB%A0%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">《卓有成效的管理者》1-2章读书笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2018-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E8%B7%91%E2%80%94%E2%80%94%E3%80%8A%E7%88%B1%E4%B8%8A%E8%B7%91%E6%AD%A5%E7%9A%84%E5%8D%81%E4%B8%89%E5%91%A8%E3%80%8B/">从零开始跑——《爱上跑步的十三周》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/21</span>
+            <a class="archive-post-title" href="/2018-%E4%BD%A0%E7%9A%84%E8%83%BD%E5%8A%9B%E8%B6%85%E4%B9%8E%E4%BD%A0%E6%83%B3%E8%B1%A1/">你的能力超乎你想象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/11</span>
+            <a class="archive-post-title" href="/2018-%E7%B4%A0%E9%A3%9F%E8%B7%91%E6%AD%A5%E4%BF%AE%E8%A1%8C/">素食跑步修行</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/08</span>
+            <a class="archive-post-title" href="/2018-%E5%8D%81%E5%88%86%E9%92%9F%E4%BA%86%E8%A7%A3ZAB%EF%BC%88Zookeeper-Atomic-Broadcast%EF%BC%89%E5%8D%8F%E8%AE%AE/">十分钟了解ZAB（Zookeeper Atomic Broadcast）协议</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span>
+            <a class="archive-post-title" href="/2018-zookeeper%E5%85%B8%E5%9E%8B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E8%A7%A3%E6%9E%90/">zookeeper典型应用场景解析</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2018-%E4%B8%80%E7%A7%8D%E5%BF%AB%E9%80%9F%E7%AE%80%E6%B4%81%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/">一种快速简洁的一致性哈希算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/27</span>
+            <a class="archive-post-title" href="/2018-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BAzookeeper%E4%B9%8B%E4%B8%80%EF%BC%9A%E5%8A%9F%E8%83%BD%E5%8F%8A%E6%9C%AC%E8%B4%A8/">深入浅出zookeeper之一：功能及本质</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/21</span>
+            <a class="archive-post-title" href="/2018-%E6%95%99%E4%BA%BA%E6%80%8E%E6%A0%B7%E8%AF%BB%E4%B9%A6%E7%9A%84%E4%B9%A6%E2%80%94%E2%80%94%E3%80%8A%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E4%B8%80%E6%9C%AC%E4%B9%A6%E3%80%8B/">教人怎样读书的书——《如何阅读一本书》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span>
+            <a class="archive-post-title" href="/2018-%E4%BA%86%E8%A7%A3%E4%B8%80%E8%87%B4%E6%80%A7hash%E7%AE%97%E6%B3%95/">了解一致性hash算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/04</span>
+            <a class="archive-post-title" href="/2018-%E4%B8%89%E9%97%A8%E9%97%AE%E9%A2%98/">三门问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span>
+            <a class="archive-post-title" href="/2018-%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%A1%88%E4%BE%8B/">问题的分析与解决案例</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span>
+            <a class="archive-post-title" href="/2018-%E8%BF%90%E8%90%A5%E4%BA%8B%E6%95%85%E7%9A%84%E5%A4%84%E7%90%86%E5%8F%8A%E9%A2%84%E9%98%B2/">运营事故的处理及预防</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/29</span>
+            <a class="archive-post-title" href="/2018-%E4%BA%92%E8%81%94%E7%BD%91%E6%9C%8D%E5%8A%A1%E7%BA%BF%E4%B8%8A%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E7%9A%84%E5%8E%9F%E5%88%99%E5%92%8C%E6%96%B9%E6%B3%95/">互联网服务线上数据迁移的原则和方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/28</span>
+            <a class="archive-post-title" href="/2018-%E5%85%B3%E4%BA%8E%E6%8E%92%E6%9C%9F%E7%9A%84%E6%80%9D%E8%80%83/">关于排期的思考</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2018-%E6%94%B9%E5%8F%98%E5%AF%B9%E6%80%9D%E8%80%83%E7%9A%84%E6%83%B3%E6%B3%95%E2%80%94%E2%80%94%E8%AF%BB%E3%80%8A%E5%BF%AB%E6%80%9D%E6%85%A2%E6%83%B3%E3%80%8B/">改变对思考的想法——读《快思慢想》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/25</span>
+            <a class="archive-post-title" href="/2018-XSS%E4%B8%93%E9%A2%98/">XSS专题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2018-%E4%B8%A4%E4%B8%AA%E8%A7%A3%E5%86%B3%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E6%A1%88%E4%BE%8B/">两个解决并发问题的案例</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/18</span>
+            <a class="archive-post-title" href="/2018-%E7%90%86%E8%A7%A3%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%E5%92%8C%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC/">理解依赖注入和控制反转</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span>
+            <a class="archive-post-title" href="/2018-php%E5%B0%8F%E7%BB%86%E8%8A%82%E4%B9%8Bswitch%E4%B8%AD%E7%9A%84continue/">php小细节之switch中的continue</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2017 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span>
+            <a class="archive-post-title" href="/2017-%E5%A6%82%E4%BD%95%E8%AE%A1%E7%AE%97%E5%9C%A8%E7%BA%BF%E6%97%B6%E9%95%BF/">如何计算在线时长</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2017-%E8%AF%B4%E8%AF%B4%E6%88%91%E4%BB%AC%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%AD%A6%E5%99%A8/">说说我们的负载均衡武器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2017-CORS%EF%BC%88%E8%B7%A8%E7%AB%99%E8%B5%84%E6%BA%90%E5%85%B1%E4%BA%AB%EF%BC%89%E4%BB%8B%E7%BB%8D/">CORS（跨站资源共享）介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/25</span>
+            <a class="archive-post-title" href="/2017-jump-Consistent-hash%E4%BB%8B%E7%BB%8D/">jump Consistent hash介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2017-%E9%80%9F%E6%88%90-%E4%BA%86%E8%A7%A3%E4%B8%80%E8%87%B4%E6%80%A7hash%E7%AE%97%E6%B3%95/">快速了解一致性hash算法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span>
+            <a class="archive-post-title" href="/2017-%E3%80%90%E6%80%9D%E8%80%83%E3%80%91%E4%B8%80%E8%87%B4%E6%80%A7hash%E5%88%87%E5%88%86%E7%8E%AF%E7%9A%84%E9%97%AE%E9%A2%98/">【思考】一致性hash切分环的问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/22</span>
+            <a class="archive-post-title" href="/2017-%E8%81%8A%E8%81%8A%E5%B7%A6%E9%97%AD%E5%8F%B3%E5%BC%80%E5%8C%BA%E9%97%B4/">聊聊左闭右开区间</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/20</span>
+            <a class="archive-post-title" href="/2017-%E5%A6%82%E4%BD%95%E7%9C%8B%E5%BE%85%E4%BC%98%E5%8C%96/">如何看待优化</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2016 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/07</span>
+            <a class="archive-post-title" href="/2016-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E8%BF%90%E8%90%A5%E4%BA%8B%E6%95%85/">如何处理运营事故</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/03</span>
+            <a class="archive-post-title" href="/2016-%E5%88%9B%E4%B8%9A%E5%85%AC%E5%8F%B8%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">创业公司如何选择编程语言</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/16</span>
+            <a class="archive-post-title" href="/2016-python%E5%8F%82%E6%95%B0/">python参数</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2014 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2013-2014-01-31-i-think-not-all-think/">想要的总能找到</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2013 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span>
+            <a class="archive-post-title" href="/2013-2013-12-12-impression-of-a-sharing/">一场分享中的感悟</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/11</span>
+            <a class="archive-post-title" href="/2013-2013-12-11-taste-some-apps/">几款app的体验报告</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/12</span>
+            <a class="archive-post-title" href="/2013-2013-11-12-vim-plugin-vundle/">vim插件之vundle</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2013-2013-11-11-github-users-get-ripple/">github帐号获得ripple币</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/10</span>
+            <a class="archive-post-title" href="/2019-2013-11-10-vim-config-tips/">vim的IDE配置和vim tips</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/03</span>
+            <a class="archive-post-title" href="/2017-2013-11-03-reading/">阅读心得</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/27</span>
+            <a class="archive-post-title" href="/2013-2013-10-27-code-refactoring/">谈一谈代码重构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span>
+            <a class="archive-post-title" href="/2013-2013-10-22-some-ideas/">一些想法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2013-2013-07-19-text-file-busy/">Text file busy</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/09</span>
+            <a class="archive-post-title" href="/2013-2013-07-09-people-like-random/">人们喜欢随机</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2013-2013-06-26-on-the-useful/">论“有用”</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/26</span>
+            <a class="archive-post-title" href="/2013-2013-06-26-gcc-fno-strict-aliasing-options-note/">gcc -fno-strict-aliasing 选项注意</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2013-2013-06-18-tcp-and-udp/">tcp和udp</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/14</span>
+            <a class="archive-post-title" href="/2013-2013-06-14-two-kinds-of-methods-to-modify-the-host-name/">两种修改主机名方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/04</span>
+            <a class="archive-post-title" href="/2013-2013-06-04-traces-of-life-have/">生命要有痕迹</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/29</span>
+            <a class="archive-post-title" href="/2013-2013-05-29-glibc-random-function/">glibc随机函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span>
+            <a class="archive-post-title" href="/2013-2013-05-27-random-port-multiplexing-and-packet-loss-problems-and-solutions/">随机端口复用导致丢包的问题及解决方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/31</span>
+            <a class="archive-post-title" href="/2013-2013-01-31-snprintf/">snprintf</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2012 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span>
+            <a class="archive-post-title" href="/2012-2012-12-30-learn-drip/">学习点滴</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/29</span>
+            <a class="archive-post-title" href="/2012-2012-12-29-resolve-memory-access-conflicts/">解决内存读写冲突</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/23</span>
+            <a class="archive-post-title" href="/2012-2012-12-23-the-art-of-unix-programming-reading-notes/">《the art of unix programming》读书笔记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/16</span>
+            <a class="archive-post-title" href="/2012-2012-12-16-recent-experience/">最近经验总结</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/09</span>
+            <a class="archive-post-title" href="/2012-2012-12-09-in-depth-understanding-of-computer-systems-reading-notes-3/">深入理解计算机系统读书笔记3</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span>
+            <a class="archive-post-title" href="/2012-2012-12-02-how-to-improve-the-work-efficiency/">如何提高工作效率</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/02</span>
+            <a class="archive-post-title" href="/2012-2012-12-02-screen-command/">screen命令使用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2012-2012-11-11-switch-too-hard-hold-point-wealth-and-desire-talk/">【转】悠着点，慢着点 ——“贫富与欲望”漫谈 </a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2012-2012-11-06-pm-summary-two/">PM总结（二）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span>
+            <a class="archive-post-title" href="/2012-2012-10-28-in-depth-understanding-of-computer-systems-study-notes-a/">深入理解计算机系统读书笔记 1</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/25</span>
+            <a class="archive-post-title" href="/2012-2012-10-25-pm-conclusion-1/">PM总结（1）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2012-2012-10-21-about-health/">关于健康</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2012-2012-10-13-vigilance-the-function-is-defined-or-declared-before-being-called/">警惕：函数被定义或声明前被调用</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span>
+            <a class="archive-post-title" href="/2012-2012-10-13-c-language-using-inline-functions/">C语言使用inline函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/23</span>
+            <a class="archive-post-title" href="/2012-2012-09-23-in-depth-understanding-of-computer-systems-reading-notes-0/">《深入理解计算机系统》读书笔记0</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/04</span>
+            <a class="archive-post-title" href="/2012-2012-09-04-several-functions-to-read-the-file/">读取文件的几个函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span>
+            <a class="archive-post-title" href="/2012-2012-08-23-for-an-idea-the-road-is-more-open/">换一种思路，路更开阔</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span>
+            <a class="archive-post-title" href="/2012-google-protocol-buffer-learning/">Google Protocol Buffer 学习</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span>
+            <a class="archive-post-title" href="/2012-2012-07-13-miscellaneous-programmers-want/">程序员杂想</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/02</span>
+            <a class="archive-post-title" href="/2012-2012-07-02-time-management/">时间管理</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/30</span>
+            <a class="archive-post-title" href="/2012-2012-06-30-vim-tips-merger-of-two-of-the-tail/">vim技巧之两段的尾合并</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2012-2012-06-24-linux-memory-allocation-precautions/">linux内存分配注意事项</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span>
+            <a class="archive-post-title" href="/2012-2012-06-20-daemon-running-single-case/">守护进程单例运行</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/20</span>
+            <a class="archive-post-title" href="/2012-2012-06-20-daemon-daemon/">daemon守护进程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012-2012-06-19-c-tips/">C++ tips</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012-2012-06-19-gcc-warning-will-be-initialized-after-when-initialized-here/">gcc warning “will be initialized after/when initialized here”</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012-2012-06-19-how-developers-with-projects/">开发人员如何带项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/19</span>
+            <a class="archive-post-title" href="/2012-2012-06-19-switch-why-developers-will-work-for-10-years-lost-insecure/">【转】为什么开发人员工作10多年了还会迷茫？没有安全感？</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/18</span>
+            <a class="archive-post-title" href="/2012-2012-06-18-makefile-variables-and-assignments/">makefile变量和赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/13</span>
+            <a class="archive-post-title" href="/2012-2012-06-13-xml-use-the-experience/">XML使用心得</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span>
+            <a class="archive-post-title" href="/2012-2012-06-01-mysql-database-to-achieve-two-master-slave-synchronization-between/">实现两个Mysql数据库之间的主从同步</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/02</span>
+            <a class="archive-post-title" href="/2012-2012-05-02-improve-efficiency-use-awk-instead-of-reading-a-file-shell/">提高效率——使用awk代替shell读文件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/13</span>
+            <a class="archive-post-title" href="/2012-linux%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E2%80%94%E2%80%94cpu%E3%80%81memory%E3%80%81io%E3%80%81network/">Linux性能监控——CPU、Memory、IO、Network</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span>
+            <a class="archive-post-title" href="/2012-2012-02-16-makefile-tips/">makefile小技巧</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/16</span>
+            <a class="archive-post-title" href="/2012-2012-02-16-remove-svn-directories/">删除svn目录</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">02/09</span>
+            <a class="archive-post-title" href="/2012-monitor%E4%B8%8A%E6%8A%A5%E6%8A%80%E5%B7%A7%E5%B0%8F%E7%BB%93/">monitor上报技巧小结</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2011 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/04</span>
+            <a class="archive-post-title" href="/2011-2011-12-04-how-to-survive-between-pm-and-de/">如何在pm和de之间生存</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/20</span>
+            <a class="archive-post-title" href="/2011-2011-11-20-how-to-improve-the-efficiency-of-meetings/">如何提高会议效率</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2011-2011-11-07-what-programmers-need/">程序员需要什么</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2011-2011-11-06-give-me-a-song-of-the-time/">给我一首歌的时间</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2011-2011-10-26-internet-design-ideas-miscellany/">互联网设计想法杂记</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span>
+            <a class="archive-post-title" href="/2011-2011-10-18-e7ad89e5be85/">等待</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span>
+            <a class="archive-post-title" href="/2011-2011-10-18-snowball/">滚雪球 </a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/12</span>
+            <a class="archive-post-title" href="/2011-2011-10-12-wave-the-summit-book/">《浪潮之巅》读后感</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011-2011-10-10-a-small-program-like/">一段喜欢的小程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011-2011-10-10-dark-time-reading-notes-four/">《暗时间》读书笔记（四）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011-2011-10-10-dark-time-reading-notes-a/">《暗时间》读书笔记（一）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011-2011-10-10-dark-time-reading-notes-three/">《暗时间》读书笔记（三）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011-2011-10-10-dark-time-reading-notes-two/">《暗时间》读书笔记（二）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/10</span>
+            <a class="archive-post-title" href="/2011-2011-10-10-find-command-summary/">find命令总结</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="技术">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技术
+        </span>
+        <span class="sidebar-category-name" data-categories="读书">
+            <span class="iconfont-archer">&#xe60a;</span>
+            读书
+        </span>
+        <span class="sidebar-category-name" data-categories="思考">
+            <span class="iconfont-archer">&#xe60a;</span>
+            思考
+        </span>
+        <span class="sidebar-category-name" data-categories="技巧">
+            <span class="iconfont-archer">&#xe60a;</span>
+            技巧
+        </span>
+        <span class="sidebar-category-name" data-categories="学习">
+            <span class="iconfont-archer">&#xe60a;</span>
+            学习
+        </span>
+        <span class="sidebar-category-name" data-categories="跑步">
+            <span class="iconfont-archer">&#xe60a;</span>
+            跑步
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://yunpengzhang.github.io",
+        root: siteMetaRoot,
+        author: "owenzhang"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>
